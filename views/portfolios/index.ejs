@@ -1,0 +1,38 @@
+<% include ../partials/header.ejs %>
+
+<h1>Welcome to Portfolio Constructicon</h1>
+<div style ='float:right'>
+<a class="btn btn-success" href="/login">Login</a>
+<a class="btn btn-danger" href="/logout">Log Out</a>
+<a class="btn btn-primary" href="/signup">Sign Up</a>
+</div>
+<a class="btn btn-warning" href="/portfolios/new">Create a NEW Portfolio</a>
+
+<table class="table table-striped">
+  <thead>
+    <th>Name</th>
+    <th>Budget</th>
+    <th></th>
+  </thead>
+  <tbody>
+
+  <% portfolios.forEach( function( portfolio ) { %>
+    <tr>
+      <td>
+        <a href="/portfolios/<%= portfolio.id %>"><%= portfolio.name %></a>
+      </td>
+      <td>
+        <%= portfolio.budget %>
+      </td>
+      <td>
+        <form  action="/portfolios/<%= portfolio.id %>/?_method=DELETE" method="post">
+          <input class="btn btn-danger" type="submit" value="X">
+        </form>
+
+      </td>
+    </tr>
+  <% }) %>
+
+  </tbody>
+</table>
+<% include ../partials/footer.ejs %>

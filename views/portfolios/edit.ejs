@@ -1,0 +1,18 @@
+<% include ../partials/header.ejs %>
+<h2>Update Your Portfolio</h2>
+<form method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
+  <div class="form-group">
+    <label for="name">Name:</label>
+      <input type="text" id="name" name="portfolio[name]" class="form-control"
+      value='<%= portfolio.name %>'>
+  </div>
+  <div class="form-group">
+    <label for="budget">Budget:</label>
+      <input type="text" id="budget" name="portfolio[budget]" class="form-control"
+      value='<%= portfolio.budget %>'>
+  </div>
+  <div class="form-group">
+    <input type="submit" value="UPDATE" class="btn btn-primary">
+  </div>
+</form>
+<% include ../partials/footer.ejs %>

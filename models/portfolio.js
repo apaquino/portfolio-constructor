@@ -1,8 +1,14 @@
 var mongoose = require("mongoose");
 
 var portfolioSchema = new mongoose.Schema({
-                    name: String,
-                    budget: Number,
+                    name: {
+                      type: String,
+                      required: true
+                    },
+                    budget: {
+                      type: Number,
+                      required: true
+                    },
                     ownerId: String,
                     stocks: [{
                       type: mongoose.Schema.Types.ObjectId,
