@@ -1,8 +1,12 @@
 var mongoose = require('mongoose');
 
 var stockSchema = new mongoose.Schema({
-                    ticker: String,
+                    symbol:  {
+                      type: String,
+                      required: true
+                    },
                     name: String,
+                    exchange: String,
                     prices: []
                   });
 
