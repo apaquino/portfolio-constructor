@@ -1,19 +1,14 @@
+<% include ../partials/header.ejs %>
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta name = "viewport" content = "width = device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=no;">
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/yahoo/yahoo-min.js"></script>
-</head>
-<body >
+
 <h1>Add a stock</h1>
 <h>Stock Quotes AutoSuggest </h>
 </br></br>
-<input style="width:800px; height:20px;" id="txtSymbolSearch" />
+<input class="form-control" id="txtSymbolSearch" />
 
 <script type="text/javascript">
   var YAHOO = {
@@ -36,16 +31,15 @@
         });
         // call back function from yui yahooapis
         YAHOO.Finance.SymbolSuggest.ssCallback = function ( data ) {
+          // Create array for customized output rather than default data from Yahoo
           var suggestions = [];
           //console.log(JSON.stringify(data.ResultSet.Result));
-          $.each(data.ResultSet.Result, function(i, val) {
+          $.each(data.ResultSet.Result, function( index, val ) {
               if (val.exchDisp === "NYSE" || val.exchDisp === "NASDAQ" || val.exchDisp === "NYSEArca" ) {
                 suggestions.push("Name: "+ val.name +" #Symbol: "+val.symbol +" #Exchange: " + val.exchDisp);
                 //suggestions.push(val.symbol);
               }
-
           });
-
           response(suggestions);
         }
   },
@@ -53,7 +47,7 @@
     select: function (event, ui) {
        //alert(ui.item.value.split("#")[1]);
        //alert(ui.item.value);
-       $("#txtTicker").val(ui.item.value.split("#")[0]);
+       //$("#txtTicker").val(ui.item.value.split("#")[0]);
        $('#symbol').val(ui.item.value.split("#")[1].split(':')[1]);
        $('#name').val(ui.item.value.split("#")[0].split(':')[1]);
        $('#exchange').val(ui.item.value.split("#")[2].split(':')[1]);
@@ -79,5 +73,4 @@
   </div>
 </form>
 
-</body>
-</html>
+<% include ../partials/footer.ejs %>
