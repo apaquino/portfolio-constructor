@@ -3,6 +3,7 @@ var express = require( 'express' ),
     bodyParser = require( 'body-parser' ),
     methodOverride = require( 'method-override' ),
     morgan = require( 'morgan' ),
+    request = require( 'request'),
     db = require( './models' );
 
 app.set( 'view engine', 'ejs' );
@@ -135,29 +136,58 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
   newStock.exchange = String.prototype.trim.call(req.body.stock.exchange);
 
   var amount = Number(req.body.stock.amount);
-  console.log(amount);
-
   var symbolTrim = String.prototype.trim.call(req.body.stock.symbol);
-  //TODO some request call to get the info
+  var symbolForUrl = encodeURIComponent(symbolTrim);
+
   db.Stock.findOne( {symbol: symbolTrim}, function( err, stock ) {
     if (!stock) {
       console.log("You need to add this stock!!!");
-      // get data from database instead of retrieving
-      db.Stock.create( newStock, function( err, newStock ){
-        if( err ) {
-          console.log(err);
-          res.render( 'stocks/new' );
-        } else {
-          var newStockSymbol = {};
-          newStockSymbol.symbol = newStock.symbol;
-          newStockSymbol.amount = amount;
-          db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
-            portfolio.stocks.push( newStockSymbol );
-            portfolio.save();
-            res.redirect( '/portfolios/' + req.params.portfolio_id);
+      /* ---------------------------------------------- */
+      // get the historical returns
+      var symbolForUrl = encodeURIComponent(symbolTrim);
+      var url = 'http://real-chart.finance.yahoo.com/table.csv?s=' + symbolForUrl + '&a=11&b=31&c=2011&d=11&e=31&f=2014&g=d&ignore=.csv';
+
+      // use request
+      request(url, function (error, response, body) {
+        if (error) {
+          console.log("Error!  Request failed - " + error);
+        } else if (!error && response.statusCode === 200) {
+          var temp  = body.split('\n'),
+              stockPrices = [];
+
+          temp.forEach( function ( stockPrice, index ){
+            var price = stockPrice.substring((stockPrice.lastIndexOf(',')+1));
+            if (!isNaN(price) && price) {
+              stockPrices.push(price);
+            }
+            // add to newStock object
+            newStock.prices = stockPrices;
           });
         }
+        // -------------------
+
+        db.Stock.create( newStock, function( err, newStock ){
+          if( err ) {
+            console.log(err);
+            res.render( 'stocks/new' );
+          } else {
+            var newStockSymbol = {};
+            newStockSymbol.symbol = newStock.symbol;
+            newStockSymbol.stockId = newStock.id;
+            newStockSymbol.amount = amount;
+            db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
+              portfolio.stocks.push( newStockSymbol );
+              portfolio.save();
+              res.redirect( '/portfolios/' + req.params.portfolio_id);
+            });
+          }
+        });
+
+
+        // ------------------
       });
+      /* ---------------------------------------------- */
+
     } else {
       console.log("You already have this stock");
       console.log(stock);
@@ -166,6 +196,13 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
   });
 });
 
+// Show Route, GET
+
+app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
+  db.Stock.findById( req.params.id, function( err, stock ) {
+      res.render('stocks/show', {stock:stock});
+    });
+});
 /**
  * Routes for user management
  */

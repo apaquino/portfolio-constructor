@@ -11,7 +11,7 @@
 <h2><%= portfolio.name %></h2>
 <% portfolio.stocks.forEach( function ( stock ) {  %>
 <p>
-  <%= stock.symbol %>
+  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.stockId %>"><%= stock.symbol %></a>
 </p>
 <p>
   <%= stock.amount %>
