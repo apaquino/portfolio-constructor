@@ -10,10 +10,7 @@ var portfolioSchema = new mongoose.Schema({
                       required: true
                     },
                     ownerId: String,
-                    stocks: [{
-                      type: mongoose.Schema.Types.ObjectId,
-                      ref: "Stock"
-                    }]
+                    stocks: [ mongoose.Schema.Types.Mixed]
                   });
 
 var Portfolio = mongoose.model("Portfolio", portfolioSchema);

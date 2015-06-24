@@ -70,7 +70,7 @@ app.post('/portfolios', function( req, res ) {
 
 // Portfolio SHOW route, GET
 app.get( '/portfolios/:id', function( req, res ) {
-  db.Portfolio.findById( req.params.id ).populate( 'stocks' )
+  db.Portfolio.findById( req.params.id )
     .exec( function ( err, portfolio ) {
       if ( err ) {
         console.log('Error when showing portfolio');
@@ -116,26 +116,77 @@ app.delete('/portfolios/:id', function( req, res ) {
 });
 
 /**
+ * Routes for stocks
+ */
+
+ // Stock NEW route, GET
+ app.get('/portfolios/:portfolio_id/stocks/new', function( req, res ) {
+  db.Portfolio.findById(req.params.portfolio_id, function ( err, portfolio ) {
+       res.render("stocks/new", {portfolio:portfolio});
+  });
+ });
+
+// Stock NEW route, POST
+app.post('/portfolios/:portfolio_id', function( req, res ){
+
+  var newStock =  {};
+  newStock.symbol = String.prototype.trim.call(req.body.stock.symbol);
+  newStock.name = String.prototype.trim.call(req.body.stock.name);
+  newStock.exchange = String.prototype.trim.call(req.body.stock.exchange);
+
+  var amount = Number(req.body.stock.amount);
+  console.log(amount);
+
+  var symbolTrim = String.prototype.trim.call(req.body.stock.symbol);
+  //TODO some request call to get the info
+  db.Stock.findOne( {symbol: symbolTrim}, function( err, stock ) {
+    if (!stock) {
+      console.log("You need to add this stock!!!");
+      // get data from database instead of retrieving
+      db.Stock.create( newStock, function( err, newStock ){
+        if( err ) {
+          console.log(err);
+          res.render( 'stocks/new' );
+        } else {
+          var newStockSymbol = {};
+          newStockSymbol.symbol = newStock.symbol;
+          newStockSymbol.amount = amount;
+          db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
+            portfolio.stocks.push( newStockSymbol );
+            portfolio.save();
+            res.redirect( '/portfolios/' + req.params.portfolio_id);
+          });
+        }
+      });
+    } else {
+      console.log("You already have this stock");
+      console.log(stock);
+      res.redirect( '/portfolios/' + req.params.portfolio_id );
+    }
+  });
+});
+
+/**
  * Routes for user management
  */
 
- app.get( '/signup', routeMiddleware.preventLoginSignup, function( req, res ) {
+ app.get( '/signup',  function( req, res ) {
    res.render('users/signup');
  });
 
  app.post('/signup', function ( req, res ) {
-   var newUser = req.body.user;
-   db.User.create(newUser, function (err, user) {
-     if (user) {
-       req.login(user);
-       res.redirect("/portfolios");
-     } else {
-       console.log(err);
-       res.render("users/signup");
-     }
+  var newUser = req.body.user;
+
+  db.User.create(newUser, function (err, user) {
+    if (user) {
+      req.login(user);
+      res.redirect("/portfolios");
+    } else {
+      console.log(err);
+      res.render("users/signup");
+    }
    });
  });
-
 
 app.get( '/login', routeMiddleware.preventLoginSignup, function ( req, res ) {
  res.render( 'users/login' );
@@ -159,5 +210,5 @@ app.get( '/logout', function ( req, res ) {
 });
 
 app.listen( 3000, function() {
-  console.log('Starting portfolio-constructor app on port 3000');
+  console.log('Starting portfolio-constructicon app on port 3000');
 });
