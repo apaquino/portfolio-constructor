@@ -23,15 +23,15 @@ var Quant  = {
   },
 
   STDDev : function( arr ) {
-    return Math.sqrt( variance( arr ) );
+    return Math.sqrt( Quant.variance( arr ) );
   },
 
-  average : function( ) {
+  average : function( arr ) {
     var result = 0;
 
     result = arr.reduce( function( x, y ) { return x + y; } );
 
-    return result/arr.length - 1;
+    return result/(arr.length - 1);
   },
 
   covariance : function( arr1, arr2 ) {
@@ -39,25 +39,25 @@ var Quant  = {
       return "Error: array length not the same";
     }
     // get ln returns of each stock price
-    var rtnArr1 = stockReturns(arr1),
-        rtnArr2 = stockReturns(arr2);
+    var rtnArr1 = Quant.stockReturns(arr1),
+        rtnArr2 = Quant.stockReturns(arr2);
 
     //get average of the return for each arr
-    var avgArr1 = average(rtnArr1),
-        avgArr2 = average(rtnArr2);
+    var avgArr1 = Quant.average(rtnArr1),
+        avgArr2 = Quant.average(rtnArr2);
 
     var covValue = 0;
 
     for (var i = 0; i < rtnArr1.length; i++) {
       covValue += (rtnArr1[i] - avgArr1) * (rtnArr2[i] - avgArr2);
     }
-    return covValue/rtnArr1.length ;
+    return covValue / rtnArr1.length ;
   },
 
   beta : function( arr1, mktarr ) {
-    var tempCov = covariance(arr1, mktarr);
-    var mktRtn = stockReturns(mktarr);
-    var mktRtnVar = variance(mktRtn);
+    var tempCov = Quant.covariance(arr1, mktarr);
+    var mktRtn = Quant.stockReturns(mktarr);
+    var mktRtnVar = Quant.variance(mktRtn);
 
     return tempCov / mktRtnVar;
   },
@@ -79,14 +79,18 @@ var Quant  = {
     var endValue = s0;
 
     for (var i = 0; i < factor; i++) {
-      endValue *=  (1 + (eR + (randomNorm() * stddev)));
+      endValue *=  (1 + (eR + (Quant.randomNorm() * stddev)));
     }
 
     return ( endValue - s0 ) / s0;
   },
 
-  monteCarlo : function( num, cb ) {
-
+  monteCarlo : function( num, s0, eR, stddev, factor, cb ) {
+    var result = 0;
+    for (var i = 0; i < num; i++) {
+      result += cb( s0, eR, stddev, factor );
+    }
+    return result / num;
   },
 
   stockGain : function( s0, s1 ) {

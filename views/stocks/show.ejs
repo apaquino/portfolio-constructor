@@ -1,4 +1,13 @@
 <% include ../partials/header %>
     <h2>Details on Stock</h2>
-    <%= stock %>
+    <%= stockDetails.symbol %>
+    <%= stockDetails.name %>
+    <%= stockDetails.exchange %>
+    <%= stockDetails.avgRtn %>
+    <%= stockDetails.varRtn %>
+    <%= stockDetails.stddevRtn %>
+    <%= stockDetails.estimatedRtn %>
+    <%= stockDetails.modifiedEstRtn %>
+    <%= stockDetails.monteCarloRtn %>
+    <%= stockDetails.estPrice %>
 <% include ../partials/footer %>

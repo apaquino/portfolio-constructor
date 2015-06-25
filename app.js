@@ -1,9 +1,11 @@
+// third party modules
 var express = require( 'express' ),
     app = express(),
     bodyParser = require( 'body-parser' ),
     methodOverride = require( 'method-override' ),
     morgan = require( 'morgan' ),
     request = require( 'request'),
+    session = require("cookie-session"),
     db = require( './models' );
 
 app.set( 'view engine', 'ejs' );
@@ -17,8 +19,8 @@ app.use( morgan( 'tiny' ));
  * Use cookie session and use and setup/config session
  */
 
-var session = require("cookie-session"),
-    loginMiddleware = require("./middleware/loginHelper"); //middleware is for request
+var quant = require( './util/quant' ),
+    loginMiddleware = require("./middleware/loginHelper"), //middleware is for request
     routeMiddleware = require("./middleware/routeHelper"); // mw intercept request to modify
 
 app.use(session({
@@ -71,8 +73,7 @@ app.post('/portfolios', function( req, res ) {
 
 // Portfolio SHOW route, GET
 app.get( '/portfolios/:id', function( req, res ) {
-  db.Portfolio.findById( req.params.id )
-    .exec( function ( err, portfolio ) {
+  db.Portfolio.findById( req.params.id , function ( err, portfolio ) {
       if ( err ) {
         console.log('Error when showing portfolio');
       } else {
@@ -199,8 +200,32 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
 // Show Route, GET
 
 app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
+  var stockDetails = {};
+
   db.Stock.findById( req.params.id, function( err, stock ) {
-      res.render('stocks/show', {stock:stock});
+
+    stockDetails.symbol = stock.symbol;
+    stockDetails.name = stock.name;
+    stockDetails.exchange = stock.exchange;
+    var initialStockPrice = stock.prices[0];
+
+    var stockRtns = quant.stockReturns(stock.prices);
+    var avgRtn = quant.average(stockRtns);
+    var varRtn = quant.variance(stockRtns);
+    var stddevRtn = quant.STDDev(stockRtns);
+    var estimatedRtn = quant.estimatedRtn(initialStockPrice, avgRtn, 250);
+    var modifiedEstRtn = quant.modifiedEstRtn(initialStockPrice, avgRtn, stddevRtn, 250);
+    var monteCarloRtn = quant.monteCarlo(10000, initialStockPrice, avgRtn, stddevRtn, 250, quant.modifiedEstRtn);
+    var estPrice = initialStockPrice * (1 + monteCarloRtn);
+
+    stockDetails.avgRtn = avgRtn;
+    stockDetails.varRtn = varRtn;
+    stockDetails.stddevRtn = stddevRtn;
+    stockDetails.estimatedRtn = estimatedRtn;
+    stockDetails.modifiedEstRtn = modifiedEstRtn;
+    stockDetails.monteCarloRtn = monteCarloRtn;
+    stockDetails.estPrice = estPrice;
+      res.render('stocks/show', {stockDetails:stockDetails});
     });
 });
 /**
