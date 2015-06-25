@@ -5,10 +5,6 @@ var portfolioSchema = new mongoose.Schema({
                       type: String,
                       required: true
                     },
-                    budget: {
-                      type: Number,
-                      required: true
-                    },
                     ownerId: String,
                     stocks: [ mongoose.Schema.Types.Mixed]
                   });

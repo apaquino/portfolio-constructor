@@ -14,8 +14,25 @@
   <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.stockId %>"><%= stock.symbol %></a>
 </p>
 <p>
+  <%= stock.name %>
+</p>
+<p>
+  <%= stock.exchange %>
+</p>
+<p>
   <%= stock.amount %>
+</p>
+<p>
+  <%= ((stock.amount / portTot) * 100).toFixed(2) %>% of the portfolio
+</p>
+<p>
+  Year End Return Estimate <%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%
+</p>
+<p>
+  Year End Price Target $<%= (stock.estPrice).toFixed(2) %>
 </p>
 
 <% }) %>
+
+Portfolio Total: <%= portTot %>
 <% include ../partials/footer.ejs %>

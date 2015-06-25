@@ -77,7 +77,13 @@ app.get( '/portfolios/:id', function( req, res ) {
       if ( err ) {
         console.log('Error when showing portfolio');
       } else {
-        res.render( 'portfolios/show', {portfolio:portfolio} );
+        var portTot = 0;
+
+        portfolio.stocks.forEach( function ( stock ) {
+          portTot += stock.amount;
+        });
+
+        res.render( 'portfolios/show', {portfolio:portfolio, portTot:portTot} );
       }
    });
 });
@@ -129,7 +135,7 @@ app.delete('/portfolios/:id', function( req, res ) {
  });
 
 // Stock NEW route, POST
-app.post('/portfolios/:portfolio_id', function( req, res ){
+app.post( '/portfolios/:portfolio_id', function( req, res ){
 
   var newStock =  {};
 
@@ -147,12 +153,10 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
   db.Stock.findOne( {symbol: symbolTrim}, function( err, stock ) {
     if (!stock) {
       console.log("You need to add this stock!!!");
-      /* ---------------------------------------------- */
       // get the historical returns
       var symbolForUrl = encodeURIComponent(symbolTrim);
       var url = 'http://real-chart.finance.yahoo.com/table.csv?s=' +
                 symbolForUrl + '&a=11&b=31&c=2011&d=11&e=31&f=2014&g=d&ignore=.csv';
-
       // use request to get the stock prices
       request(url, function (error, response, body) {
         if (error) {
@@ -160,7 +164,6 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
         } else if (!error && response.statusCode === 200) {
           var temp  = body.split('\n'),
               stockPrices = [];
-
           temp.forEach( function ( stockPrice, index ){
             var price = stockPrice.substring((stockPrice.lastIndexOf(',')+1));
             if (!isNaN(price) && price) {
@@ -168,7 +171,6 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
             }
             // add to newStock object
             newStock.prices = stockPrices;
-
           });
           //calculate analytical data on stock
           initialStockPrice = stockPrices[0];
@@ -177,7 +179,6 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
           newStock.estimatedYrEndRtn = estimatedYrEndRtn;
           newStock.estPrice = estPrice;
         }
-        // -------------------
 
         db.Stock.create( newStock, function( err, newStock ){
           if( err ) {
@@ -185,14 +186,12 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
             res.render( 'stocks/new' );
           } else {
             var newStockSymbol = {};
-            console.log('estimated price ' + estPrice);
-            console.log('estimatedYrEndRtn ' + estimatedYrEndRtn);
             newStockSymbol.symbol = newStock.symbol;
             newStockSymbol.stockId = newStock.id;
             newStockSymbol.amount = amount;
             newStockSymbol.estimatedYrEndRtn = estimatedYrEndRtn;
             newStockSymbol.estPrice = estPrice;
-
+            // add stock to stock array in the portfolio for faster retrieval
             db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
               portfolio.stocks.push( newStockSymbol );
               portfolio.save();
@@ -200,15 +199,11 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
             });
           }
         });
-
-
-        // ------------------
       });
-      /* ---------------------------------------------- */
-
     } else {
       console.log("You already have this stock");
       console.log(stock);
+      // TODO need to add this to the portfolio still well!!!
       res.redirect( '/portfolios/' + req.params.portfolio_id );
     }
   });
@@ -226,13 +221,12 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
     stockDetails.symbol = stock.symbol;
     stockDetails.name = stock.name;
     stockDetails.exchange = stock.exchange;
+    stockDetails.estPrice = stock.estPrice;
+    stockDetails.estimatedYrEndRtn = stock.estimatedYrEndRtn;
 
-    var initialStockPrice = stock.prices[0],
-        estimatedYrEndRtn = quant.estimatedYrEndRtn(initialStockPrice, stock.prices),
-        estPrice = initialStockPrice * (1 + estimatedYrEndRtn);
-
-    stockDetails.estPrice = estPrice;
-    stockDetails.estimatedYrEndRtn = estimatedYrEndRtn;
+    // var initialStockPrice = stock.prices[0],
+    //     estimatedYrEndRtn = quant.estimatedYrEndRtn(initialStockPrice, stock.prices),
+    //     estPrice = initialStockPrice * (1 + estimatedYrEndRtn);
 
     var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
 
@@ -242,19 +236,13 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
         console.log("Error!  Request failed - " + error);
         res.render('stocks/show', {stockDetails:stockDetails});
       } else if (!error && response.statusCode === 200) {
-        console.log(body);
+        // console.log(body);
         currPrice = body.split(',')[1];
         stockDetails.currPrice = currPrice;
         res.render('stocks/show', {stockDetails:stockDetails});
       }
     });
-    // res.render('stocks/show', {stockDetails:stockDetails});
-    });
-
-    // get previous close prices
-
-
-
+  });
 });
 /**
  * Routes for user management
