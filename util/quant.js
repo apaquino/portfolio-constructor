@@ -95,6 +95,15 @@ var Quant  = {
 
   stockGain : function( s0, s1 ) {
     return (s0 - s1) / s1;
+  },
+
+  estimatedYrEndRtn : function( s0, arr ) {
+    var stockRtns = Quant.stockReturns(arr),
+        avgRtn = Quant.average(stockRtns),
+        stddevRtn = Quant.STDDev(stockRtns),
+        monteCarloRtn = Quant.monteCarlo(10000, s0, avgRtn, stddevRtn, 250, Quant.modifiedEstRtn);
+
+    return monteCarloRtn;
   }
 };
 

@@ -21,7 +21,7 @@ db.portfolios.remove({});
   ["stocks",  "558b131a9a0c0b515b138090", "exchange", "NASDAQ" ],
   ["stocks",  "558b131a9a0c0b515b138090", "prices", [100,200,100,200] ],
 
-  
+
 
 
 ].forEach( function( fact ) {
@@ -34,3 +34,13 @@ db.portfolios.remove({});
   // console.log(collection, id, attrName, value, attrValue);
  db[collection].update( {_id: id } , {$set: attrValue }, {upsert: true});
 });
+
+function estimatedYrlyRtns( s0, arr ){
+  var stockRtns = Quant.stockReturns(arr),
+      avgRtn = Quant.average(stockRtns),
+      varRtn = Quant.variance(stockRtns),
+      stddevRtn = Quant.STDDev(stockRtns),
+      monteCarloRtn = Quant.monteCarlo(10000, s0, avgRtn, stddevRtn, 250, Quant.modifiedEstRtn);
+
+  return monteCarloRtn;
+}

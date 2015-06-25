@@ -1,13 +1,15 @@
 <% include ../partials/header %>
     <h2>Details on Stock</h2>
-    <%= stockDetails.symbol %>
-    <%= stockDetails.name %>
-    <%= stockDetails.exchange %>
-    <%= stockDetails.avgRtn %>
-    <%= stockDetails.varRtn %>
-    <%= stockDetails.stddevRtn %>
-    <%= stockDetails.estimatedRtn %>
-    <%= stockDetails.modifiedEstRtn %>
-    <%= stockDetails.monteCarloRtn %>
-    <%= stockDetails.estPrice %>
+    <p><%= stockDetails.symbol %></p>
+    <p><%= stockDetails.name %></p>
+    <p><%= stockDetails.exchange %></p>
+    <!-- <p><%= stockDetails.avgRtn %></p>
+    <p><%= stockDetails.varRtn %></p>
+    <p><%= stockDetails.stddevRtn %></p>
+    <p><%= stockDetails.estimatedRtn %></p>
+    <p><%= stockDetails.modifiedEstRtn %></p>
+    <p><%= stockDetails.monteCarloRtn %></p> -->
+    <p>Estimated Year End Price: $<%= stockDetails.estPrice.toFixed(2) %></p>
+    <p>Estimated Return: <%= (stockDetails.estimatedYrEndRtn * 100).toFixed(2) %>%</p>
+    <p>Last Closing Price: $<%= stockDetails.currPrice %></p>
 <% include ../partials/footer %>

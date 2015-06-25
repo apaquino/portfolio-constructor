@@ -200,33 +200,44 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
 // Show Route, GET
 
 app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
-  var stockDetails = {};
+  var stockDetails = {},
+      symbolForUrl,
+      currPrice;
 
   db.Stock.findById( req.params.id, function( err, stock ) {
-
+    symbolForUrl = stock.symbol;
     stockDetails.symbol = stock.symbol;
     stockDetails.name = stock.name;
     stockDetails.exchange = stock.exchange;
-    var initialStockPrice = stock.prices[0];
 
-    var stockRtns = quant.stockReturns(stock.prices);
-    var avgRtn = quant.average(stockRtns);
-    var varRtn = quant.variance(stockRtns);
-    var stddevRtn = quant.STDDev(stockRtns);
-    var estimatedRtn = quant.estimatedRtn(initialStockPrice, avgRtn, 250);
-    var modifiedEstRtn = quant.modifiedEstRtn(initialStockPrice, avgRtn, stddevRtn, 250);
-    var monteCarloRtn = quant.monteCarlo(10000, initialStockPrice, avgRtn, stddevRtn, 250, quant.modifiedEstRtn);
-    var estPrice = initialStockPrice * (1 + monteCarloRtn);
+    var initialStockPrice = stock.prices[0],
+        estimatedYrEndRtn = quant.estimatedYrEndRtn(initialStockPrice, stock.prices),
+        estPrice = initialStockPrice * (1 + estimatedYrEndRtn);
 
-    stockDetails.avgRtn = avgRtn;
-    stockDetails.varRtn = varRtn;
-    stockDetails.stddevRtn = stddevRtn;
-    stockDetails.estimatedRtn = estimatedRtn;
-    stockDetails.modifiedEstRtn = modifiedEstRtn;
-    stockDetails.monteCarloRtn = monteCarloRtn;
     stockDetails.estPrice = estPrice;
-      res.render('stocks/show', {stockDetails:stockDetails});
+    stockDetails.estimatedYrEndRtn = estimatedYrEndRtn;
+
+    var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
+
+    request(urlPrevClose, function (error, response, body) {
+      console.log(urlPrevClose);
+      if (error) {
+        console.log("Error!  Request failed - " + error);
+        res.render('stocks/show', {stockDetails:stockDetails});
+      } else if (!error && response.statusCode === 200) {
+        console.log(body);
+        currPrice = body.split(',')[1];
+        stockDetails.currPrice = currPrice;
+        res.render('stocks/show', {stockDetails:stockDetails});
+      }
     });
+    // res.render('stocks/show', {stockDetails:stockDetails});
+    });
+
+    // get previous close prices
+
+
+
 });
 /**
  * Routes for user management
