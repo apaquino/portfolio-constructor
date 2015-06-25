@@ -1,42 +1,8 @@
 <% include ../partials/header.ejs %>
 
-<script type="text/javascript">
-function CurrencyFormat(number)
-{
-   var decimalplaces = 2;
-   var decimalcharacter = ".";
-   var thousandseparater = ",";
-   number = parseFloat(number);
-   var sign = number < 0 ? "-" : "";
-   var formatted = new String(number.toFixed(decimalplaces));
-   if( decimalcharacter.length && decimalcharacter != "." ) { formatted = formatted.replace(/\./,decimalcharacter); }
-   var integer = "";
-   var fraction = "";
-   var strnumber = new String(formatted);
-   var dotpos = decimalcharacter.length ? strnumber.indexOf(decimalcharacter) : -1;
-   if( dotpos > -1 )
-   {
-      if( dotpos ) { integer = strnumber.substr(0,dotpos); }
-      fraction = strnumber.substr(dotpos+1);
-   }
-   else { integer = strnumber; }
-   if( integer ) { integer = String(Math.abs(integer)); }
-   while( fraction.length < decimalplaces ) { fraction += "0"; }
-   temparray = new Array();
-   while( integer.length > 3 )
-   {
-      temparray.unshift(integer.substr(-3));
-      integer = integer.substr(0,integer.length-3);
-   }
-   temparray.unshift(integer);
-   integer = temparray.join(thousandseparater);
-   return sign + integer + decimalcharacter + fraction;
-}
-</script>
-
-
 <h1>Add a stock</h1>
-<a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a>
+<a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a><br>
+<a href="/portfolios/<%= portfolio.id %>/edit">Change your portfolio name</a>
 <h2><%= portfolio.name %></h2>
 <table class="table table-hover">
   <thead>
@@ -48,6 +14,7 @@ function CurrencyFormat(number)
     <th>Est. Yr End Return </th>
     <th>Est. Yr End Price</th>
     <th>Recent Close Price</th>
+    <th>Edit Amount</th>
     <th></th>
   </thead>
   <tbody>
@@ -61,6 +28,8 @@ function CurrencyFormat(number)
     <td>  <%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
     <td>$ <%= (stock.estPrice).toFixed(2) %></td>
     <td>$ <%= currPrices[index].split(",")[1] %></td>
+    <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>/edit">
+          <input type="button" name="name" value="edit"></a></td>
     <td>  <input type="button" name="name" value="X"></td>
   </tr>
 <% }) %>
@@ -72,7 +41,8 @@ function CurrencyFormat(number)
     <td>Portfolio Total:</td>
     <td><b>$<%= portTot %></b></td>
     <td>Avg Rtn of Portfolio:</td>
-    <td><%= ((portAvg * 100)).toFixed(2) %>%</td>
+    <td><b><%= ((portAvg * 100)).toFixed(2) %>%</b></td>
+    <td></td>
     <td></td>
     <td></td>
     <td></td>
