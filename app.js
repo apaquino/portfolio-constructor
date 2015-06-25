@@ -77,13 +77,36 @@ app.get( '/portfolios/:id', function( req, res ) {
       if ( err ) {
         console.log('Error when showing portfolio');
       } else {
-        var portTot = 0;
+        var portTot = 0,
+            portSymbols = "",
+            portAvg = 0;
 
         portfolio.stocks.forEach( function ( stock ) {
           portTot += stock.amount;
+          portSymbols += encodeURIComponent(stock.symbol) + "+";
         });
 
-        res.render( 'portfolios/show', {portfolio:portfolio, portTot:portTot} );
+        portfolio.stocks.forEach( function (stock ){
+          portAvg += (stock.amount / portTot) * stock.estimatedYrEndRtn;
+        });
+        // portSymbols = portSymbols.substring(0, portSymbols.length - 1);
+        portSymbols = portSymbols.slice(0,-1);
+
+          var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + portSymbols + '&f=sp';
+
+          request(urlPrevClose, function (error, response, body) {
+            console.log(urlPrevClose);
+            if (error) {
+              console.log("Error!  Request failed - " + error);
+              res.render('stocks/show', {stockDetails:stockDetails});
+            } else if (!error && response.statusCode === 200) {
+              // console.log(body);
+              var currPrices = body.split("\n");
+              currPrices.pop();
+              //console.log(currPrices);
+              res.render( 'portfolios/show', {portfolio:portfolio, portTot:portTot, portAvg:portAvg, currPrices:currPrices} );
+            }
+          });
       }
    });
 });
@@ -188,6 +211,8 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
             var newStockSymbol = {};
             newStockSymbol.symbol = newStock.symbol;
             newStockSymbol.stockId = newStock.id;
+            newStockSymbol.name = newStock.name;
+            newStockSymbol.exchange = newStock.exchange;
             newStockSymbol.amount = amount;
             newStockSymbol.estimatedYrEndRtn = estimatedYrEndRtn;
             newStockSymbol.estPrice = estPrice;
@@ -202,9 +227,18 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
       });
     } else {
       console.log("You already have this stock");
-      console.log(stock);
+      //console.log(stock);
       // TODO need to add this to the portfolio still well!!!
-      res.redirect( '/portfolios/' + req.params.portfolio_id );
+      newStock.id = stock.id;
+      newStock.amount = amount;
+      newStock.estimatedYrEndRtn = stock.estimatedYrEndRtn;
+      newStock.estPrice = stock.estPrice;
+      console.log(newStock);
+      db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
+        portfolio.stocks.push( newStock );
+        portfolio.save();
+        res.redirect( '/portfolios/' + req.params.portfolio_id );
+      });
     }
   });
 });
@@ -223,10 +257,6 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
     stockDetails.exchange = stock.exchange;
     stockDetails.estPrice = stock.estPrice;
     stockDetails.estimatedYrEndRtn = stock.estimatedYrEndRtn;
-
-    // var initialStockPrice = stock.prices[0],
-    //     estimatedYrEndRtn = quant.estimatedYrEndRtn(initialStockPrice, stock.prices),
-    //     estPrice = initialStockPrice * (1 + estimatedYrEndRtn);
 
     var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
 

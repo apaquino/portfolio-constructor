@@ -1,38 +1,82 @@
 <% include ../partials/header.ejs %>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/yahoo/yahoo-min.js"></script>
+<script type="text/javascript">
+function CurrencyFormat(number)
+{
+   var decimalplaces = 2;
+   var decimalcharacter = ".";
+   var thousandseparater = ",";
+   number = parseFloat(number);
+   var sign = number < 0 ? "-" : "";
+   var formatted = new String(number.toFixed(decimalplaces));
+   if( decimalcharacter.length && decimalcharacter != "." ) { formatted = formatted.replace(/\./,decimalcharacter); }
+   var integer = "";
+   var fraction = "";
+   var strnumber = new String(formatted);
+   var dotpos = decimalcharacter.length ? strnumber.indexOf(decimalcharacter) : -1;
+   if( dotpos > -1 )
+   {
+      if( dotpos ) { integer = strnumber.substr(0,dotpos); }
+      fraction = strnumber.substr(dotpos+1);
+   }
+   else { integer = strnumber; }
+   if( integer ) { integer = String(Math.abs(integer)); }
+   while( fraction.length < decimalplaces ) { fraction += "0"; }
+   temparray = new Array();
+   while( integer.length > 3 )
+   {
+      temparray.unshift(integer.substr(-3));
+      integer = integer.substr(0,integer.length-3);
+   }
+   temparray.unshift(integer);
+   integer = temparray.join(thousandseparater);
+   return sign + integer + decimalcharacter + fraction;
+}
+</script>
+
 
 <h1>Add a stock</h1>
 <a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a>
-
 <h2><%= portfolio.name %></h2>
-<% portfolio.stocks.forEach( function ( stock ) {  %>
-<p>
-  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.stockId %>"><%= stock.symbol %></a>
-</p>
-<p>
-  <%= stock.name %>
-</p>
-<p>
-  <%= stock.exchange %>
-</p>
-<p>
-  <%= stock.amount %>
-</p>
-<p>
-  <%= ((stock.amount / portTot) * 100).toFixed(2) %>% of the portfolio
-</p>
-<p>
-  Year End Return Estimate <%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%
-</p>
-<p>
-  Year End Price Target $<%= (stock.estPrice).toFixed(2) %>
-</p>
-
+<table class="table table-hover">
+  <thead>
+    <th>Company Name</th>
+    <th>Stock Symbol</th>
+    <th>Exchange</th>
+    <th>Amount</th>
+    <th>% of portfolio</th>
+    <th>Est. Yr End Return </th>
+    <th>Est. Yr End Price</th>
+    <th>Recent Close Price</th>
+    <th></th>
+  </thead>
+  <tbody>
+<% portfolio.stocks.forEach( function ( stock, index ) {  %>
+  <tr>
+    <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>"><%= stock.symbol %></a></td>
+    <td>  <%= stock.name %></td>
+    <td>  <%= stock.exchange %></td>
+    <td>$ <%= stock.amount.toFixed(2) %></td>
+    <td>  <%= ((stock.amount / portTot) * 100).toFixed(2) %></td>
+    <td>  <%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
+    <td>$ <%= (stock.estPrice).toFixed(2) %></td>
+    <td>$ <%= currPrices[index].split(",")[1] %></td>
+    <td>  <input type="button" name="name" value="X"></td>
+  </tr>
 <% }) %>
-
-Portfolio Total: <%= portTot %>
+</tbody>
+<tfoot>
+  <tr>
+    <td></td>
+    <td></td>
+    <td>Portfolio Total:</td>
+    <td><b>$<%= portTot %></b></td>
+    <td>Avg Rtn of Portfolio:</td>
+    <td><%= ((portAvg * 100)).toFixed(2) %>%</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</tfoot>
+</table>
 <% include ../partials/footer.ejs %>
