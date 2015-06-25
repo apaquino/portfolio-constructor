@@ -7,6 +7,8 @@ var stockSchema = new mongoose.Schema({
                     },
                     name: String,
                     exchange: String,
+                    estimatedYrEndRtn: Number,
+                    estPrice: Number,
                     prices: []
                   });
 

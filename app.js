@@ -132,13 +132,17 @@ app.delete('/portfolios/:id', function( req, res ) {
 app.post('/portfolios/:portfolio_id', function( req, res ){
 
   var newStock =  {};
+
   newStock.symbol = String.prototype.trim.call(req.body.stock.symbol);
   newStock.name = String.prototype.trim.call(req.body.stock.name);
   newStock.exchange = String.prototype.trim.call(req.body.stock.exchange);
 
-  var amount = Number(req.body.stock.amount);
-  var symbolTrim = String.prototype.trim.call(req.body.stock.symbol);
-  var symbolForUrl = encodeURIComponent(symbolTrim);
+  var amount = Number(req.body.stock.amount),
+      symbolTrim = String.prototype.trim.call(req.body.stock.symbol),
+      symbolForUrl = encodeURIComponent(symbolTrim),
+      initialStockPrice = 0,
+      estimatedYrEndRtn = 0,
+      estPrice = 0;
 
   db.Stock.findOne( {symbol: symbolTrim}, function( err, stock ) {
     if (!stock) {
@@ -146,9 +150,10 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
       /* ---------------------------------------------- */
       // get the historical returns
       var symbolForUrl = encodeURIComponent(symbolTrim);
-      var url = 'http://real-chart.finance.yahoo.com/table.csv?s=' + symbolForUrl + '&a=11&b=31&c=2011&d=11&e=31&f=2014&g=d&ignore=.csv';
+      var url = 'http://real-chart.finance.yahoo.com/table.csv?s=' +
+                symbolForUrl + '&a=11&b=31&c=2011&d=11&e=31&f=2014&g=d&ignore=.csv';
 
-      // use request
+      // use request to get the stock prices
       request(url, function (error, response, body) {
         if (error) {
           console.log("Error!  Request failed - " + error);
@@ -163,7 +168,14 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
             }
             // add to newStock object
             newStock.prices = stockPrices;
+
           });
+          //calculate analytical data on stock
+          initialStockPrice = stockPrices[0];
+          estimatedYrEndRtn = quant.estimatedYrEndRtn(initialStockPrice, stockPrices);
+          estPrice = initialStockPrice * (1 + estimatedYrEndRtn);
+          newStock.estimatedYrEndRtn = estimatedYrEndRtn;
+          newStock.estPrice = estPrice;
         }
         // -------------------
 
@@ -173,9 +185,14 @@ app.post('/portfolios/:portfolio_id', function( req, res ){
             res.render( 'stocks/new' );
           } else {
             var newStockSymbol = {};
+            console.log('estimated price ' + estPrice);
+            console.log('estimatedYrEndRtn ' + estimatedYrEndRtn);
             newStockSymbol.symbol = newStock.symbol;
             newStockSymbol.stockId = newStock.id;
             newStockSymbol.amount = amount;
+            newStockSymbol.estimatedYrEndRtn = estimatedYrEndRtn;
+            newStockSymbol.estPrice = estPrice;
+
             db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
               portfolio.stocks.push( newStockSymbol );
               portfolio.save();
