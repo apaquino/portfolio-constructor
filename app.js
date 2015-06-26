@@ -210,7 +210,7 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
           } else {
             var newStockSymbol = {};
             newStockSymbol.symbol = newStock.symbol;
-            newStockSymbol.stockId = newStock.id;
+            newStockSymbol.id = newStock.id;
             newStockSymbol.name = newStock.name;
             newStockSymbol.exchange = newStock.exchange;
             newStockSymbol.amount = amount;
@@ -273,6 +273,22 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
       }
     });
   });
+});
+
+app.delete( '/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
+  db.Portfolio.update (
+    { _id: req.params.portfolio_id },
+    { $pull: { stocks: { id: req.params.id } } },
+    { multi: true },
+    function ( err, portfolio ) {
+      if ( err ) {
+        console.log("Error when trying to remove the stock from portfolio");
+        res.redirect( '/portfolios/' + req.params.portfolio_id );
+      } else {
+        res.redirect( '/portfolios/' + req.params.portfolio_id );
+      }
+    }
+  );
 });
 /**
  * Routes for user management

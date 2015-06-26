@@ -29,8 +29,12 @@
     <td>$ <%= (stock.estPrice).toFixed(2) %></td>
     <td>$ <%= currPrices[index].split(",")[1] %></td>
     <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>/edit">
-          <input type="button" name="name" value="edit"></a></td>
-    <td>  <input type="button" name="name" value="X"></td>
+          <input class="btn btn-info" type="button" name="name" value="edit"></a></td>
+    <td>
+          <form action="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>?_method=DELETE" method="POST">
+            <input class="btn btn-danger" type="submit" name="name" value="X">
+          </form>
+    </td>
   </tr>
 <% }) %>
 </tbody>

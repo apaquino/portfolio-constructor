@@ -37,7 +37,7 @@
           var suggestions = [];
           //console.log(JSON.stringify(data.ResultSet.Result));
           $.each(data.ResultSet.Result, function( index, val ) {
-              if (val.exchDisp === "NYSE" || val.exchDisp === "NASDAQ" || val.exchDisp === "NYSEArca" ) {
+              if (val.exchDisp === "NYSE" || val.exchDisp === "NASDAQ" || val.exchDisp === "NYSEArca" ||  val.exchDisp === "AMEX") {
                 suggestions.push("Name: "+ val.name +" #Symbol: "+val.symbol +" #Exchange: " + val.exchDisp);
                 //suggestions.push(val.symbol);
               }
