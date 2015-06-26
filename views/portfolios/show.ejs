@@ -1,4 +1,5 @@
 <% include ../partials/header.ejs %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js" ></script>
 
 <h1>Add a stock</h1>
 <a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a><br>
@@ -18,7 +19,14 @@
     <th></th>
   </thead>
   <tbody>
+<% var pieChartData  =[ ] %>
 <% portfolio.stocks.forEach( function ( stock, index ) {  %>
+  <% var  pieChartDataElement  = {}
+          pieChartDataElement.label =  stock.name
+          pieChartDataElement.legendText =  stock.name
+          pieChartDataElement.y = ((stock.amount / portTot) * 100).toFixed(2)
+          pieChartData.push(pieChartDataElement)
+  %>
   <tr>
     <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>"><%= stock.symbol %></a></td>
     <td>  <%= stock.name %></td>
@@ -53,4 +61,46 @@
   </tr>
 </tfoot>
 </table>
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
+<script type="text/javascript">
+window.onload = function () {
+	var chart = new CanvasJS.Chart("chartContainer",
+	{
+		backgroundColor: "#EFECEC",
+    title:{
+			fontColor: "#6b6b6b",
+      text: "Portfolio Stock Allocation %"
+		},
+                animationEnabled: true,
+		legend:{
+			verticalAlign: "center",
+			horizontalAlign: "left",
+			fontSize: 16,
+			fontFamily: "Helvetica",
+      fontColor: "#6b6b6b"
+		},
+		theme: "theme1",
+		data: [
+  		{
+  			type: "pie",
+  			indexLabelFontFamily: "Garamond",
+  			indexLabelFontSize: 20,
+  			indexLabel: "{label} {y}%",
+  			startAngle:-20,
+  			showInLegend: true,
+  			toolTipContent:"{legendText} {y}%",
+  			dataPoints: [
+          <% pieChartData.forEach( function (chartData ) { %>
+            {y: <%= chartData.y %>, label: "<%= chartData.label %>", legendText:"<%= chartData.legendText %>"},
+          <% }) %>
+  			]
+  		}
+		]
+	});
+  
+	chart.render();
+}
+</script>
 <% include ../partials/footer.ejs %>
