@@ -274,28 +274,47 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
     });
   });
 });
+
 // Stock UPDATE route, GET --
 // to edit a stock from the stocks array in the portfolio
-
 app.get( '/portfolios/:portfolio_id/stocks/:id/edit', function ( req, res ) {
-  db.Portfolio.find(
+  db.Portfolio.findOne(
     { _id: req.params.portfolio_id},
     function ( err, portfolio ) {
       if (err) {
         console.log("Error in finding stock in portfolio " + err );
       } else {
-        var stocks = portfolio[0].stocks,
+        var stocks = portfolio.stocks,
             stock;
         stocks.forEach( function ( portStock ) {
           if (portStock.id === req.params.id ) {
             stock = portStock;
           }
         });
-        res.render( 'stocks/edit', {stock:stock});
+        res.render( 'stocks/edit', {portfolio:portfolio, stock:stock});
       }
     });
 });
 
+// Stock UPDATE route, PUT --
+// to edit a stock from the stocks array in the portfolio
+app.put( '/portfolios/:portfolio_id/stocks/:id', function ( req, res ) {
+  console.log(req.body.stock);
+  var newAmount = Number(req.body.stock.amount);
+  db.Portfolio.update(
+    { _id: req.params.portfolio_id, "stocks.id": req.params.id },
+    { $set: { "stocks.$.amount": newAmount }},
+    function( err, portfolio ) {
+      if (err) {
+        console.log("Something went wrong when updating stock amount " + err);
+        console.log(portfolio);
+      } else {
+        console.log(portfolio);
+        res.redirect('/portfolios/' + req.params.portfolio_id);
+      }
+    }
+  );
+});
 // Stock DELETE route, DELETE --
 // to remove stock from the stocks array in the portfolio
 app.delete( '/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
