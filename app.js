@@ -274,7 +274,30 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
     });
   });
 });
+// Stock UPDATE route, GET --
+// to edit a stock from the stocks array in the portfolio
 
+app.get( '/portfolios/:portfolio_id/stocks/:id/edit', function ( req, res ) {
+  db.Portfolio.find(
+    { _id: req.params.portfolio_id},
+    function ( err, portfolio ) {
+      if (err) {
+        console.log("Error in finding stock in portfolio " + err );
+      } else {
+        var stocks = portfolio[0].stocks,
+            stock;
+        stocks.forEach( function ( portStock ) {
+          if (portStock.id === req.params.id ) {
+            stock = portStock;
+          }
+        });
+        res.render( 'stocks/edit', {stock:stock});
+      }
+    });
+});
+
+// Stock DELETE route, DELETE --
+// to remove stock from the stocks array in the portfolio
 app.delete( '/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
   db.Portfolio.update (
     { _id: req.params.portfolio_id },
