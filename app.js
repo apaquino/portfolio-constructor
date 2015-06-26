@@ -95,7 +95,6 @@ app.get( '/portfolios/:id', function( req, res ) {
           var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + portSymbols + '&f=sp';
 
           request(urlPrevClose, function (error, response, body) {
-            console.log(urlPrevClose);
             if (error) {
               console.log("Error!  Request failed - " + error);
               res.render('stocks/show', {stockDetails:stockDetails});
@@ -233,7 +232,6 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
       newStock.amount = amount;
       newStock.estimatedYrEndRtn = stock.estimatedYrEndRtn;
       newStock.estPrice = stock.estPrice;
-      console.log(newStock);
       db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
         portfolio.stocks.push( newStock );
         portfolio.save();
@@ -299,7 +297,6 @@ app.get( '/portfolios/:portfolio_id/stocks/:id/edit', function ( req, res ) {
 // Stock UPDATE route, PUT --
 // to edit a stock from the stocks array in the portfolio
 app.put( '/portfolios/:portfolio_id/stocks/:id', function ( req, res ) {
-  console.log(req.body.stock);
   var newAmount = Number(req.body.stock.amount);
   db.Portfolio.update(
     { _id: req.params.portfolio_id, "stocks.id": req.params.id },
@@ -307,9 +304,7 @@ app.put( '/portfolios/:portfolio_id/stocks/:id', function ( req, res ) {
     function( err, portfolio ) {
       if (err) {
         console.log("Something went wrong when updating stock amount " + err);
-        console.log(portfolio);
       } else {
-        console.log(portfolio);
         res.redirect('/portfolios/' + req.params.portfolio_id);
       }
     }
