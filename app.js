@@ -244,7 +244,8 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
 // Show Route, GET
 
 app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
-  var stockDetails = {},
+  var portfolio_id = req.params.portfolio_id,
+      stockDetails = {},
       symbolForUrl,
       currPrice;
 
@@ -269,7 +270,7 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
         // console.log(body);
         currPrice = body.split(',')[1];
         stockDetails.currPrice = currPrice;
-        res.render('stocks/show', {stockDetails:stockDetails});
+        res.render('stocks/show', {stockDetails:stockDetails, portfolio_id:portfolio_id});
       }
     });
   });

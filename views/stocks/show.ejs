@@ -1,4 +1,11 @@
 <% include ../partials/header %>
+<div class="ui breadcrumb">
+  <a class="section" href="/portfolios">Home</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="/portfolios/<%= portfolio_id %>">Portfolio</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Add a stock</div>
+</div>
     <h2>Details on Stock</h2>
     <p><%= stockDetails.symbol %></p>
     <p><%= stockDetails.name %></p>
