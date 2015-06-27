@@ -9,8 +9,10 @@
 <h2><%= portfolio.name %></h2>
 
 </br></br>
-<label for="txtSymbolSearch">Search:</label>
-<input class="form-control" id="txtSymbolSearch" />
+<div class="ui fluid icon input">
+  <input type="text" id="txtSymbolSearch" placeholder="Search stock by symbol or name ...">
+  <i class="search icon"></i>
+</div>
 
 <script type="text/javascript">
   var YAHOO = {
@@ -57,25 +59,25 @@
 });
 </script>
 <br>
-<form action="/portfolios/<%= portfolio.id %>" method="POST" >
-  <div class="form-group">
+<form class="ui form" action="/portfolios/<%= portfolio.id %>" method="POST" >
+  <div class="field">
     <label for="symbol">Symbol:</label>
       <input type="text" id="symbol" name="stock[symbol]" class="form-control">
   </div>
-  <div class="form-group">
+  <div class="field">
     <label for="name">Company Name:</label>
       <input type="text" id="name" name="stock[name]" class="form-control" >
   </div>
-  <div class="form-group">
+  <div class="field">
     <label for="exchange">Exchange:</label>
       <input type="text" id="exchange" name="stock[exchange]" class="form-control" >
   </div>
-  <div class="form-group">
+  <div class="field">
     <label for="amount">Amount:</label>
       <input type="text" id="amount" name="stock[amount]" class="form-control" >
   </div>
-  <div class="form-group">
-    <input type="submit" value="Add" class="btn btn-primary">
+  <div >
+    <input class="ui green button" type="submit" value="Add" class="btn btn-primary">
   </div>
 </form>
 
