@@ -1,4 +1,13 @@
 <% include ../partials/header.ejs %>
+
+<div class="ui breadcrumb">
+  <a class="section" href="/portfolios">Home</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="/portfolios/<%= portfolio.id %>">Portfolio - <%= portfolio.name %></a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Edit Portfolio Name</div>
+</div>
+
 <h2>Update Your Portfolio</h2>
 <form method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
   <div class="form-group">
@@ -7,7 +16,7 @@
       value='<%= portfolio.name %>'>
   </div>
   <div class="form-group">
-    <input type="submit" value="UPDATE" class="btn btn-primary">
+    <input class="ui green button" type="submit" value="UPDATE" class="btn btn-primary">
   </div>
 </form>
 <% include ../partials/footer.ejs %>
