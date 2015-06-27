@@ -1,6 +1,12 @@
 <% include ../partials/header.ejs %>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js" ></script>
 
+<div class="ui breadcrumb">
+  <a class="section" href="/portfolios">Home</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Portfolio - <%= portfolio.name %></div>
+</div>
+
 <h1>Add a stock</h1>
 <a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a><br>
 <a href="/portfolios/<%= portfolio.id %>/edit">Change your portfolio name</a>
@@ -8,6 +14,20 @@
 
 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
+<table class="ui collapsing table">
+  <thead>
+    <tr>
+      <th>Average Portfolio Return</th>
+      <th>Portfolio Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><em><%= ((portAvg * 100)).toFixed(2) %>%</em></td>
+      <td><em><%= portTot %></em></td>
+    </tr>
+  </tbody>
+</table>
 <table class="ui striped table">
   <thead>
     <th>Company Name</th>
