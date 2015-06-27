@@ -8,7 +8,7 @@
 
 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
-<table class="table table-hover">
+<table class="ui striped table">
   <thead>
     <th>Company Name</th>
     <th>Stock Symbol</th>
@@ -38,10 +38,10 @@
     <td><%= (stock.estPrice).toFixed(2) %></td>
     <td><%= currPrices[index].split(",")[1] %></td>
     <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>/edit">
-          <input class="btn btn-info" type="button" name="name" value="edit"></a></td>
+          <i class="edit icon"></i></a></td>
     <td>
           <form action="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>?_method=DELETE" method="POST">
-            <input class="btn btn-danger" type="submit" name="name" value="X">
+            <input class="circular ui icon button" style="background:red;color:white" type="submit" name="name" value="X">
           </form>
     </td>
   </tr>
