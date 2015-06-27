@@ -250,11 +250,13 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
 
   db.Stock.findById( req.params.id, function( err, stock ) {
     symbolForUrl = stock.symbol;
+
     stockDetails.symbol = stock.symbol;
     stockDetails.name = stock.name;
     stockDetails.exchange = stock.exchange;
     stockDetails.estPrice = stock.estPrice;
     stockDetails.estimatedYrEndRtn = stock.estimatedYrEndRtn;
+    stockDetails.stddev = quant.STDDev(quant.stockReturns(stock.prices)) * Math.sqrt(250);
 
     var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
 

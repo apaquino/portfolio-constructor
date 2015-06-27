@@ -5,6 +5,9 @@
 <a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a><br>
 <a href="/portfolios/<%= portfolio.id %>/edit">Change your portfolio name</a>
 <h2><%= portfolio.name %></h2>
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
 <table class="table table-hover">
   <thead>
     <th>Company Name</th>
@@ -62,8 +65,6 @@
 </tfoot>
 </table>
 
-<div id="chartContainer" style="height: 300px; width: 100%;"></div>
-
 <script type="text/javascript">
 window.onload = function () {
 	var chart = new CanvasJS.Chart("chartContainer",
@@ -99,7 +100,7 @@ window.onload = function () {
   		}
 		]
 	});
-  
+
 	chart.render();
 }
 </script>

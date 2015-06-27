@@ -6,4 +6,6 @@
     <p>Estimated Year End Price: $<%= stockDetails.estPrice.toFixed(2) %></p>
     <p>Estimated Return: <%= (stockDetails.estimatedYrEndRtn * 100).toFixed(2) %>%</p>
     <p>Last Closing Price: $<%= stockDetails.currPrice %></p>
+    <p>Risk: +/- <%= (stockDetails.stddev * 100).toFixed(2) %> %</p>
+
 <% include ../partials/footer %>
