@@ -4,11 +4,11 @@
 </div>
 <h1>Welcome to Portfolio Constructicon</h1>
 <div style ='float:right'>
-<a class="btn btn-success" href="/login">Login</a>
-<a class="btn btn-danger" href="/logout">Log Out</a>
-<a class="btn btn-primary" href="/signup">Sign Up</a>
+<a class="ui green button" href="/login"><i class="sign in icon"></i>sign in</a>
+<a class="ui red button" href="/logout"><i class="sign out icon"></i>sign out</a>
+<a class="ui blue button" href="/signup"><i class="add user icon"></i>sign Up</a>
 </div>
-<a class="btn btn-warning" href="/portfolios/new">Create a NEW Portfolio</a>
+<a class="ui green button" href="/portfolios/new"><i class="add circle icon"></i>Create a NEW Portfolio</a>
 
 <table class="ui striped table">
   <thead>
@@ -22,11 +22,10 @@
       <td>
         <a href="/portfolios/<%= portfolio.id %>"><%= portfolio.name %></a>
       </td>
-      <td>
+      <td style="text-align:right">
         <form  action="/portfolios/<%= portfolio.id %>/?_method=DELETE" method="post">
-          <input class="btn btn-danger" type="submit" value="X">
+          <input class="circular ui icon button" style="background:red;color:white" type="submit" value="X">
         </form>
-
       </td>
     </tr>
   <% }) %>
