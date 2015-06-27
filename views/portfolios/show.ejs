@@ -12,13 +12,12 @@
   <thead>
     <th>Company Name</th>
     <th>Stock Symbol</th>
-    <th>Exchange</th>
-    <th>Amount</th>
+    <th>Amount ($)</th>
     <th>% of portfolio</th>
     <th>Est. Yr End Return </th>
-    <th>Est. Yr End Price</th>
-    <th>Recent Close Price</th>
-    <th>Edit Amount</th>
+    <th>Est. Yr End Price($)</th>
+    <th>Previous Price($)</th>
+    <th>Edit</th>
     <th></th>
   </thead>
   <tbody>
@@ -31,14 +30,13 @@
           pieChartData.push(pieChartDataElement)
   %>
   <tr>
-    <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>"><%= stock.symbol %></a></td>
-    <td>  <%= stock.name %></td>
-    <td>  <%= stock.exchange %></td>
-    <td>$ <%= stock.amount.toFixed(2) %></td>
-    <td>  <%= ((stock.amount / portTot) * 100).toFixed(2) %></td>
-    <td>  <%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
-    <td>$ <%= (stock.estPrice).toFixed(2) %></td>
-    <td>$ <%= currPrices[index].split(",")[1] %></td>
+    <td><a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>"><%= stock.symbol %></a></td>
+    <td><%= stock.name %></td>
+    <td><%= stock.amount.toFixed(2) %></td>
+    <td><%= ((stock.amount / portTot) * 100).toFixed(2) %></td>
+    <td><%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
+    <td><%= (stock.estPrice).toFixed(2) %></td>
+    <td><%= currPrices[index].split(",")[1] %></td>
     <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>/edit">
           <input class="btn btn-info" type="button" name="name" value="edit"></a></td>
     <td>
@@ -51,7 +49,6 @@
 </tbody>
 <tfoot>
   <tr>
-    <td></td>
     <td></td>
     <td>Portfolio Total:</td>
     <td><b>$<%= portTot %></b></td>
