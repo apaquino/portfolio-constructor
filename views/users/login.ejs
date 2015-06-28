@@ -1,37 +1,47 @@
 <% include ../partials/header %>
 
 <h1>Login</h1>
-<form class="ui form" method="POST" action="/login" >
-  <div class="two fields">
-    <div class="required field">
-      <label for="username"> Username:</label>
-      <div class="ui icon input">
-        <input type="text" id="email" name="user[username]" placeholder="username" autofocus>
-        <i class="user icon"></i>
-      </div>
-    </div>
-    <div class="required field">
-      <label for="pass"> Password:</label>
-      <div class="ui icon input">
-        <input type="password" id="pass" name="user[password]" placeholder="enter password">
-        <i class="lock icon"></i>
-      </div>
+<div class="ui two column middle aligned relaxed fitted stackable grid">
+  <div class="column">
+    <div class="ui form segment">
+      <form class="ui form" method="POST" action="/login" >
+        <div class="two fields">
+          <div class="required field">
+            <label for="username"> Username:</label>
+            <div class="ui icon input">
+              <input type="text" id="email" name="user[username]" placeholder="username" autofocus>
+              <i class="user icon"></i>
+            </div>
+          </div>
+          <div class="required field">
+            <label for="pass"> Password:</label>
+            <div class="ui icon input">
+              <input type="password" id="pass" name="user[password]" placeholder="enter password">
+              <i class="lock icon"></i>
+            </div>
+          </div>
+        </div>
+        <input type="submit" value="Login" class="ui green button">
+      </form>
     </div>
   </div>
-  <input type="submit" value="Login" class="ui green button">
-</form>
-<hr>
-<p>
-  Don't have an account? Sign up here
-</p>
 
-<a href="/signup">
-  <div class="huge blue ui labeled icon button">
-     <i class="signup icon"></i>
-     Sign Up
- </div>
-</a>
+<div class="ui vertical divider">
+  Or
+</div>
 
+<div class="center aligned column">
+  <p>
+    Don't have an account? Sign up here
+  </p>
 
+  <a href="/signup">
+    <div class="huge blue ui labeled icon button">
+       <i class="signup icon"></i>
+       Sign Up
+   </div>
+   </div>
+  </a>
+</div>
 
 <% include ../partials/footer %>
