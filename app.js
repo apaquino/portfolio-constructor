@@ -41,7 +41,7 @@ app.get( '/', function( req, res ) {
 });
 
 // Portfolio INDEX route, GET
-app.get( '/portfolios', function( req, res ) {
+app.get( '/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
   db.Portfolio.find( {}, function( err, portfolios ) {
     if ( err ) {
       //TODO
@@ -54,12 +54,12 @@ app.get( '/portfolios', function( req, res ) {
 
 // Portfolio NEW route, GET
 
-app.get( '/portfolios/new', function( req, res ) {
+app.get( '/portfolios/new', routeMiddleware.ensureLoggedIn, function( req, res ) {
   res.render( 'portfolios/new');
 });
 
 // Portfolio NEW route, POST
-app.post('/portfolios', function( req, res ) {
+app.post('/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
   var newPortfolio = req.body.portfolio;
   db.Portfolio.create( newPortfolio , function( err, portfolio ) {
     if( err ) {
@@ -72,7 +72,7 @@ app.post('/portfolios', function( req, res ) {
 });
 
 // Portfolio SHOW route, GET
-app.get( '/portfolios/:id', function( req, res ) {
+app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
   db.Portfolio.findById( req.params.id , function ( err, portfolio ) {
       if ( err ) {
         console.log('Error when showing portfolio');
@@ -111,28 +111,28 @@ app.get( '/portfolios/:id', function( req, res ) {
 });
 
 // Portfolio EDIT route, GET
-app.get('/portfolios/:id/edit', function( req, res ) {
+app.get('/portfolios/:id/edit', routeMiddleware.ensureLoggedIn, function( req, res ) {
   db.Portfolio.findById( req.params.id, function ( err, portfolio ) {
       res.render( 'portfolios/edit', {portfolio:portfolio} );
   });
 });
 
 // Portfolio UPDATE route, PUT
-app.put('/portfolios/:id',  function( req, res ) {
+app.put('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
   var updatedPost = req.body.portfolio;
   db.Portfolio.findByIdAndUpdate( req.params.id, updatedPost,
     function (err, post) {
        if( err ) {
          res.render( 'portfolios/edit' );
        } else {
-         res.redirect('/portfolios');
+         res.redirect('/portfolios/' + req.params.id);
        }
      });
 });
 
 // Portfolio DELETE route, DELETE
 
-app.delete('/portfolios/:id', function( req, res ) {
+app.delete('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
   db.Portfolio.findById( req.params.id, function ( err, portfolio ) {
     if( err ) {
       console.log( err );
@@ -150,14 +150,14 @@ app.delete('/portfolios/:id', function( req, res ) {
  */
 
  // Stock NEW route, GET
- app.get('/portfolios/:portfolio_id/stocks/new', function( req, res ) {
+ app.get('/portfolios/:portfolio_id/stocks/new', routeMiddleware.ensureLoggedIn, function( req, res ) {
   db.Portfolio.findById(req.params.portfolio_id, function ( err, portfolio ) {
        res.render("stocks/new", {portfolio:portfolio});
   });
  });
 
 // Stock NEW route, POST
-app.post( '/portfolios/:portfolio_id', function( req, res ){
+app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, function( req, res ){
 
   var newStock =  {};
 
@@ -226,15 +226,25 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
       });
     } else {
       console.log("You already have this stock");
-      //console.log(stock);
-      // TODO need to add this to the portfolio still well!!!
       newStock.id = stock.id;
       newStock.amount = amount;
       newStock.estimatedYrEndRtn = stock.estimatedYrEndRtn;
       newStock.estPrice = stock.estPrice;
       db.Portfolio.findById(req.params.portfolio_id, function( err, portfolio ){
-        portfolio.stocks.push( newStock );
-        portfolio.save();
+        // TODO check if already in portfolio and redirect with messag if you do!!
+        var haveStock = false;
+
+        portfolio.stocks.forEach( function( stock ) {
+           if (newStock.symbol === stock.symbol) {
+             haveStock = true;
+           }
+        });
+
+        if (!haveStock) {
+          portfolio.stocks.push( newStock );
+          portfolio.save();
+        }
+
         res.redirect( '/portfolios/' + req.params.portfolio_id );
       });
     }
@@ -242,8 +252,7 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
 });
 
 // Show Route, GET
-
-app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
+app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
   var stockDetails = {},
       symbolForUrl,
       currPrice;
@@ -258,7 +267,6 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
       if (err) {
         console.log("Error getting portfolio for stock show page " + err);
       } else {
-        // added
         var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
 
         request(urlPrevClose, function (error, response, body) {
@@ -267,22 +275,19 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
             console.log("Error!  Request failed - " + error);
             res.render('stocks/show', {stockDetails:stockDetails});
           } else if (!error && response.statusCode === 200) {
-            // console.log(body);
             currPrice = body.split(',')[1];
             stockDetails.currPrice = currPrice;
             res.render('stocks/show', {stock:stock, stockDetails:stockDetails, portfolio:portfolio});
           }
-        }); // ******** for request
-        // added
+        });
       }
-    }); // for db.Portfolio
+    });
   });
-  //*********** for db.Stock
 });
 
 // Stock UPDATE route, GET --
 // to edit a stock from the stocks array in the portfolio
-app.get( '/portfolios/:portfolio_id/stocks/:id/edit', function ( req, res ) {
+app.get( '/portfolios/:portfolio_id/stocks/:id/edit', routeMiddleware.ensureLoggedIn, function ( req, res ) {
   db.Portfolio.findOne(
     { _id: req.params.portfolio_id},
     function ( err, portfolio ) {
@@ -303,7 +308,7 @@ app.get( '/portfolios/:portfolio_id/stocks/:id/edit', function ( req, res ) {
 
 // Stock UPDATE route, PUT --
 // to edit a stock from the stocks array in the portfolio
-app.put( '/portfolios/:portfolio_id/stocks/:id', function ( req, res ) {
+app.put( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, function ( req, res ) {
   var newAmount = Number(req.body.stock.amount);
   db.Portfolio.update(
     { _id: req.params.portfolio_id, "stocks.id": req.params.id },
@@ -319,7 +324,7 @@ app.put( '/portfolios/:portfolio_id/stocks/:id', function ( req, res ) {
 });
 // Stock DELETE route, DELETE --
 // to remove stock from the stocks array in the portfolio
-app.delete( '/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
+app.delete( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
   db.Portfolio.update (
     { _id: req.params.portfolio_id },
     { $pull: { stocks: { id: req.params.id } } },
@@ -334,11 +339,11 @@ app.delete( '/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
     }
   );
 });
+
 /**
  * Routes for user management
  */
-
- app.get( '/signup',  function( req, res ) {
+ app.get( '/signup', routeMiddleware.preventLoginSignup, function( req, res ) {
    res.render('users/signup');
  });
 
@@ -374,7 +379,7 @@ app.post( '/login', function ( req, res ) {
 
 app.get( '/logout', function ( req, res ) {
   req.logout();
-  res.redirect( '/' );
+  res.redirect( '/login' );
 });
 
 app.listen( 3000, function() {

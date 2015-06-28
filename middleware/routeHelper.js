@@ -11,9 +11,9 @@ var routeHelpers = {
   },
 
   ensureCorrectUser: function( req, res, next ) {
-    db.Portfolio.findById(req.params.id, function(err, post){
+    db.Portfolio.findById(req.params.id, function(err, portfolio){
       if (portfolio.ownerId !== req.session.id) {
-        res.redirect('/portfolio/' + portfolio.id);
+        res.redirect('/portfolios/' + portfolio.id);
       }
       else {
        return next();
