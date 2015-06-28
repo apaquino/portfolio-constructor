@@ -4,7 +4,7 @@
   <i class="right chevron icon divider"></i>
   <a class="section" href="/portfolios/<%= portfolio_id %>">Portfolio</a>
   <i class="right chevron icon divider"></i>
-  <div class="active section">Add a stock</div>
+  <div class="active section">Stock details</div>
 </div>
   <h2>Details on <%= stockDetails.name %></h2>
   <h3>(Symbol: <%= stockDetails.symbol %> ) traded on the <%= stockDetails.exchange %> exchange</h3>
@@ -30,7 +30,7 @@
     </thead>
     <tbody>
       <tr>
-        <% if ( stockDetails.estPrice.toFixed(2) > stockDetails.currPrice ) { %>
+        <% if ( Number(stockDetails.estPrice) > Number(stockDetails.currPrice) ) { %>
           <td class="positive">
         <% } else { %>
           <td class="negative">
