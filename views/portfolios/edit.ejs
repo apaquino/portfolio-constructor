@@ -9,11 +9,13 @@
 </div>
 
 <h2>Edit portfolio name</h2>
-<form class="ui form" method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
-  <div class="field">
-    <label for="name">Name:</label>
-      <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>'>
-  </div>
-    <input class="ui green button" type="submit" value="UPDATE" class="ui green button">
-</form>
+<div class="ui form segment">
+  <form class="ui form" method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
+    <div class="field">
+      <label for="name">Name:</label>
+        <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>'>
+    </div>
+      <input class="ui green button" type="submit" value="UPDATE" class="ui green button">
+  </form>
+</div>
 <% include ../partials/footer.ejs %>

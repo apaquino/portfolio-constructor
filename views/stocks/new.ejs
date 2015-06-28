@@ -58,33 +58,34 @@
        //alert(ui.item.value.split("#")[1]);
        //alert(ui.item.value);
        //$("#txtTicker").val(ui.item.value.split("#")[0]);
-       $('#symbol').val(ui.item.value.split("#")[1].split(':')[1]);
-       $('#name').val(ui.item.value.split("#")[0].split(':')[1]);
-       $('#exchange').val(ui.item.value.split("#")[2].split(':')[1]);
+       $('#symbol').val(ui.item.value.split("#")[1].split(':')[1]).attr("disabled", "disabled");
+       $('#name').val(ui.item.value.split("#")[0].split(':')[1]).attr("disabled", "disabled");
+       $('#exchange').val(ui.item.value.split("#")[2].split(':')[1]).attr("disabled", "disabled");
   },
 });
 </script>
 <br>
-<form class="ui form" action="/portfolios/<%= portfolio.id %>" method="POST" >
-  <div class="field">
-    <label for="symbol">Symbol:</label>
-      <input type="text" id="symbol" name="stock[symbol]" class="form-control">
-  </div>
-  <div class="field">
-    <label for="name">Company Name:</label>
-      <input type="text" id="name" name="stock[name]" class="form-control" >
-  </div>
-  <div class="field">
-    <label for="exchange">Exchange:</label>
-      <input type="text" id="exchange" name="stock[exchange]" class="form-control" >
-  </div>
-  <div class="field">
-    <label for="amount">Amount:</label>
-      <input type="text" id="amount" name="stock[amount]" class="form-control" >
-  </div>
-  <div >
-    <input class="ui green button" type="submit" value="Add" >
-  </div>
-</form>
-
+<div class="ui form segment">
+  <form class="ui form" action="/portfolios/<%= portfolio.id %>" method="POST" >
+    <div class="field">
+      <label for="symbol">Symbol:</label>
+        <input type="text" id="symbol" name="stock[symbol]" class="form-control">
+    </div>
+    <div class="field">
+      <label for="name">Company Name:</label>
+        <input type="text" id="name" name="stock[name]" class="form-control" >
+    </div>
+    <div class="field">
+      <label for="exchange">Exchange:</label>
+        <input type="text" id="exchange" name="stock[exchange]" class="form-control" >
+    </div>
+    <div class="field">
+      <label for="amount">Amount:</label>
+        <input type="text" id="amount" name="stock[amount]" class="form-control" >
+    </div>
+    <div >
+      <input class="ui green button" type="submit" value="Add" >
+    </div>
+  </form>
+</div>
 <% include ../partials/footer.ejs %>
