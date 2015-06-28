@@ -9,14 +9,11 @@
 </div>
 
 <h2>Update Your Portfolio</h2>
-<form method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
-  <div class="form-group">
+<form class="ui form" method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
+  <div class="field">
     <label for="name">Name:</label>
-      <input type="text" id="name" name="portfolio[name]" class="form-control"
-      value='<%= portfolio.name %>'>
+      <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>'>
   </div>
-  <div class="form-group">
-    <input class="ui green button" type="submit" value="UPDATE" class="btn btn-primary">
-  </div>
+    <input class="ui green button" type="submit" value="UPDATE" class="ui green button">
 </form>
 <% include ../partials/footer.ejs %>
