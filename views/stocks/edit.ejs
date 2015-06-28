@@ -1,19 +1,29 @@
 <% include ../partials/header.ejs %>
 
-<h2>UPDATE amount of stock in the <em><%= portfolio.name %></em> portfolio</h2>
+<div class="ui breadcrumb">
+  <a class="section" href="/portfolios">Home</a>
+  <i class="right chevron icon divider"></i>
+  <a class="section" href="/portfolios/<%= portfolio._id%>/">Portfolio - <%= portfolio.name %></a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">Update amount</div>
+
+</div>
+
+<h2>UPDATE amount of <%= stock.name %> stock</h2>
+<h3>In the <em><%= portfolio.name %></em> portfolio</h3>
 
 <form class="ui form"method="POST" action="/portfolios/<%= portfolio._id%>/stocks/<%= stock.id%>/?_method=PUT" >
   <div class="field">
     <label for="symbol">Symbol:</label>
-      <input type="text" id="symbol" class="form-control" disabled value="<%= stock.symbol%>" >
+      <input type="text" id="symbol"  disabled value="<%= stock.symbol%>" >
   </div>
   <div class="field">
     <label for="name">Name:</label>
-      <input type="text" id="name" class="form-control" disabled value="<%= stock.name %>" >
+      <input type="text" id="name"  disabled value="<%= stock.name %>" >
   </div>
   <div class="field">
     <label for="amount">Amount:</label>
-      <input type="text" id="name" name="stock[amount]" class="form-control" value="<%= stock.amount%>" >
+      <input type="text" id="name" name="stock[amount]"  value="<%= stock.amount%>" >
   </div>
 
     <input type="submit" value="UPDATE" class="ui green button">

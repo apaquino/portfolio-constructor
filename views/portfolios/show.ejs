@@ -17,14 +17,16 @@
 <table class="ui collapsing table">
   <thead>
     <tr>
-      <th>Average Portfolio Return</th>
       <th>Portfolio Total</th>
+      <th>Estimated Average Portfolio Return</th>
+      <th>Estimated Return</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><em><%= ((portAvg * 100)).toFixed(2) %>%</em></td>
       <td><em><%= portTot %></em></td>
+      <td><em><%= ((portAvg * 100)).toFixed(2) %>%</em></td>
+      <td><em>$<%= (portAvg).toFixed(2) * portTot %></em></td>
     </tr>
   </tbody>
 </table>
