@@ -6,11 +6,18 @@
   <i class="right chevron icon divider"></i>
   <div class="active section">Portfolio - <%= portfolio.name %></div>
 </div>
+<hr>
+<a href="/portfolios/<%= portfolio.id %>/stocks/new">
+  <i class="add circle icon"></i>
+  Add a stock to the portfolio
+</a>
+<br>
+<a href="/portfolios/<%= portfolio.id %>/edit">
+  <i class="edit icon"></i>
+  Edit portfolio name
+</a>
 
-<h1>Add a stock</h1>
-<a href="/portfolios/<%= portfolio.id %>/stocks/new">Add a New Stock Page</a><br>
-<a href="/portfolios/<%= portfolio.id %>/edit">Change your portfolio name</a>
-<h2><%= portfolio.name %></h2>
+<h2><%= portfolio.name %> </h2>
 
 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
