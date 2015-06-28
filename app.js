@@ -252,10 +252,10 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
   db.Stock.findById( req.params.id, function( err, stock ) {
     symbolForUrl = stock.symbol;
 
-    stockDetails.symbol = stock.symbol;
-    stockDetails.name = stock.name;
-    stockDetails.exchange = stock.exchange;
-    stockDetails.estPrice = stock.estPrice;
+    // stockDetails.symbol = stock.symbol;
+    // stockDetails.name = stock.name;
+    // stockDetails.exchange = stock.exchange;
+    // stockDetails.estPrice = stock.estPrice;
     stockDetails.estimatedYrEndRtn = stock.estimatedYrEndRtn;
     stockDetails.stddev = quant.STDDev(quant.stockReturns(stock.prices)) * Math.sqrt(250);
 
@@ -270,7 +270,7 @@ app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
         // console.log(body);
         currPrice = body.split(',')[1];
         stockDetails.currPrice = currPrice;
-        res.render('stocks/show', {stockDetails:stockDetails, portfolio_id:portfolio_id});
+        res.render('stocks/show', {stock:stock, stockDetails:stockDetails, portfolio_id:portfolio_id});
       }
     });
   });

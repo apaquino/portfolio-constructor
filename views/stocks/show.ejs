@@ -6,8 +6,8 @@
   <i class="right chevron icon divider"></i>
   <div class="active section">Stock details</div>
 </div>
-  <h2>Details on <%= stockDetails.name %></h2>
-  <h3>(Symbol: <%= stockDetails.symbol %> ) traded on the <%= stockDetails.exchange %> exchange</h3>
+  <h2>Details on <%= stock.name %></h2>
+  <h3>(Symbol: <%= stock.symbol %> ) traded on the <%= stock.exchange %> exchange</h3>
 
   <hr>
 
@@ -30,12 +30,12 @@
     </thead>
     <tbody>
       <tr>
-        <% if ( Number(stockDetails.estPrice) > Number(stockDetails.currPrice) ) { %>
+        <% if ( Number(stock.estPrice) > Number(stockDetails.currPrice) ) { %>
           <td class="positive">
         <% } else { %>
           <td class="negative">
         <% } %>
-          $<%= stockDetails.estPrice.toFixed(2) %>
+          $<%= stock.estPrice.toFixed(2) %>
         </td>
         <td>
           $<%= stockDetails.currPrice %>
