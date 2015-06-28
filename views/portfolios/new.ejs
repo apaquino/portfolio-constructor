@@ -8,13 +8,12 @@
 
 <h2>Create a new portfolio</h2>
 <div class="ui form segment">
-
-<form class="ui form" method="POST" action="/portfolios" >
-  <div class="field">
-    <label for="name">Name:</label>
-      <input type="text" id="name" name="portfolio[name]" class="form-control" autofocus>
-  </div>
-    <input class="ui green button" type="submit" value="Add">
-</form>
+  <form class="ui form" method="POST" action="/portfolios" >
+    <div class="field">
+      <label for="name">Name:</label>
+        <input type="text" id="name" name="portfolio[name]" class="form-control" autofocus>
+    </div>
+      <input class="ui green button" type="submit" value="Add">
+  </form>
 </div>
 <% include ../partials/footer.ejs %>
