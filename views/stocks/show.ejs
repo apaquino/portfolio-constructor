@@ -6,13 +6,49 @@
   <i class="right chevron icon divider"></i>
   <div class="active section">Add a stock</div>
 </div>
-    <h2>Details on Stock</h2>
-    <p><%= stockDetails.symbol %></p>
-    <p><%= stockDetails.name %></p>
-    <p><%= stockDetails.exchange %></p>
-    <p>Estimated Year End Price: $<%= stockDetails.estPrice.toFixed(2) %></p>
-    <p>Estimated Return: <%= (stockDetails.estimatedYrEndRtn * 100).toFixed(2) %>%</p>
-    <p>Last Closing Price: $<%= stockDetails.currPrice %></p>
-    <p>Risk: +/- <%= (stockDetails.stddev * 100).toFixed(2) %> %</p>
+  <h2>Details on <%= stockDetails.name %></h2>
+  <h3>(Symbol: <%= stockDetails.symbol %> ) traded on the <%= stockDetails.exchange %> exchange</h3>
+
+  <hr>
+
+  <table class="ui table">
+    <thead>
+      <tr>
+        <th>
+          Estimated Year End Price
+        </th>
+        <th>
+          Last Closing Price
+        </th>
+        <th>
+          Estimated Return
+        </th>
+        <th>
+          Risk
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <% if ( stockDetails.estPrice.toFixed(2) > stockDetails.currPrice ) { %>
+          <td class="positive">
+        <% } else { %>
+          <td class="negative">
+        <% } %>
+          $<%= stockDetails.estPrice.toFixed(2) %>
+        </td>
+        <td>
+          $<%= stockDetails.currPrice %>
+        </td>
+        <td>
+          <%= (stockDetails.estimatedYrEndRtn * 100).toFixed(2) %>%
+        </td>
+        <td>
+          +/- <%= (stockDetails.stddev * 100).toFixed(2) %>% of Estimated Return
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<hr>
 
 <% include ../partials/footer %>
