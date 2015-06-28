@@ -244,36 +244,40 @@ app.post( '/portfolios/:portfolio_id', function( req, res ){
 // Show Route, GET
 
 app.get('/portfolios/:portfolio_id/stocks/:id', function( req, res ) {
-  var portfolio_id = req.params.portfolio_id,
-      stockDetails = {},
+  var stockDetails = {},
       symbolForUrl,
       currPrice;
 
   db.Stock.findById( req.params.id, function( err, stock ) {
     symbolForUrl = stock.symbol;
 
-    // stockDetails.symbol = stock.symbol;
-    // stockDetails.name = stock.name;
-    // stockDetails.exchange = stock.exchange;
-    // stockDetails.estPrice = stock.estPrice;
     stockDetails.estimatedYrEndRtn = stock.estimatedYrEndRtn;
     stockDetails.stddev = quant.STDDev(quant.stockReturns(stock.prices)) * Math.sqrt(250);
 
-    var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
+    db.Portfolio.findById( req.params.portfolio_id, function( err, portfolio ) {
+      if (err) {
+        console.log("Error getting portfolio for stock show page " + err);
+      } else {
+        // added
+        var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
 
-    request(urlPrevClose, function (error, response, body) {
-      console.log(urlPrevClose);
-      if (error) {
-        console.log("Error!  Request failed - " + error);
-        res.render('stocks/show', {stockDetails:stockDetails});
-      } else if (!error && response.statusCode === 200) {
-        // console.log(body);
-        currPrice = body.split(',')[1];
-        stockDetails.currPrice = currPrice;
-        res.render('stocks/show', {stock:stock, stockDetails:stockDetails, portfolio_id:portfolio_id});
+        request(urlPrevClose, function (error, response, body) {
+          console.log(urlPrevClose);
+          if (error) {
+            console.log("Error!  Request failed - " + error);
+            res.render('stocks/show', {stockDetails:stockDetails});
+          } else if (!error && response.statusCode === 200) {
+            // console.log(body);
+            currPrice = body.split(',')[1];
+            stockDetails.currPrice = currPrice;
+            res.render('stocks/show', {stock:stock, stockDetails:stockDetails, portfolio:portfolio});
+          }
+        }); // ******** for request
+        // added
       }
-    });
+    }); // for db.Portfolio
   });
+  //*********** for db.Stock
 });
 
 // Stock UPDATE route, GET --
