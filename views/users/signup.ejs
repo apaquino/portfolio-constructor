@@ -1,6 +1,9 @@
 <% include ../partials/header %>
 
 <h1>Sign up</h1>
+<div class="ui segment">
+
+<div class="ui form segment">
 
 <form class="ui form" method="POST" action="/signup" >
   <div class="two fields">
@@ -31,16 +34,22 @@
   </div>
   <input type="submit" value="Sign up" class="ui green button">
 </form>
-<hr>
+</div>
+</div>
+
+<div class="ui horizontal divider">
+  Or
+</div>
+<div style="width:300px;margin-left:auto;margin-right:auto;text-align:center;">
+
 <p>
   Already have an account? Login in here
 </p>
   <a href="/login">
     <div class="huge blue ui labeled icon button">
        <i class="sign in icon"></i>
-       Login In
+       Login
    </div>
  </a>
-
-
+ </div>
 <% include ../partials/footer %>
