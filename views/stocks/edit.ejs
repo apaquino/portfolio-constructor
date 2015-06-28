@@ -2,21 +2,21 @@
 
 <h2>UPDATE amount of stock in the <em><%= portfolio.name %></em> portfolio</h2>
 
-<form method="POST" action="/portfolios/<%= portfolio._id%>/stocks/<%= stock.id%>/?_method=PUT" >
-  <div class="form-group">
+<form class="ui form"method="POST" action="/portfolios/<%= portfolio._id%>/stocks/<%= stock.id%>/?_method=PUT" >
+  <div class="field">
     <label for="symbol">Symbol:</label>
       <input type="text" id="symbol" class="form-control" disabled value="<%= stock.symbol%>" >
   </div>
-  <div class="form-group">
+  <div class="field">
     <label for="name">Name:</label>
       <input type="text" id="name" class="form-control" disabled value="<%= stock.name %>" >
   </div>
-  <div class="form-group">
+  <div class="field">
     <label for="amount">Amount:</label>
       <input type="text" id="name" name="stock[amount]" class="form-control" value="<%= stock.amount%>" >
   </div>
-  <div class="form-group">
-    <input type="submit" value="UPDATE" class="btn btn-primary">
-  </div>
+
+    <input type="submit" value="UPDATE" class="ui green button">
+
 </form>
 <% include ../partials/footer.ejs %>
