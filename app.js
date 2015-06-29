@@ -94,7 +94,7 @@ app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensu
         // portSymbols = portSymbols.substring(0, portSymbols.length - 1);
         portSymbols = portSymbols.slice(0,-1);
 
-          var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + portSymbols + '&f=sp';
+          var urlPrevClose = 'https://finance.yahoo.com/d/quotes.csv?s=' + portSymbols + '&f=sp';
 
           request(urlPrevClose, function (error, response, body) {
             if (error) {
@@ -268,7 +268,7 @@ app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, 
       if (err) {
         console.log("Error getting portfolio for stock show page " + err);
       } else {
-        var urlPrevClose = 'http://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
+        var urlPrevClose = 'https://finance.yahoo.com/d/quotes.csv?s=' + symbolForUrl + '&f=sp';
 
         request(urlPrevClose, function (error, response, body) {
           console.log(urlPrevClose);
