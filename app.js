@@ -74,7 +74,7 @@ app.post('/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
 });
 
 // Portfolio SHOW route, GET
-app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
+app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUser, function( req, res ) {
   db.Portfolio.findById( req.params.id , function ( err, portfolio ) {
       if ( err ) {
         console.log('Error when showing portfolio');
@@ -162,7 +162,6 @@ app.delete('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res
 app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, function( req, res ){
 
   var newStock =  {};
-
   newStock.symbol = String.prototype.trim.call(req.body.stock.symbol);
   newStock.name = String.prototype.trim.call(req.body.stock.name);
   newStock.exchange = String.prototype.trim.call(req.body.stock.exchange);
