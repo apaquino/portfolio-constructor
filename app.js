@@ -61,6 +61,8 @@ app.get( '/portfolios/new', routeMiddleware.ensureLoggedIn, function( req, res )
 // Portfolio NEW route, POST
 app.post('/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
   var newPortfolio = req.body.portfolio;
+      newPortfolio.ownerId = req.session.id;
+      
   db.Portfolio.create( newPortfolio , function( err, portfolio ) {
     if( err ) {
       console.log(err);
