@@ -387,6 +387,13 @@ app.get( '/logout', function ( req, res ) {
   res.redirect( '/login' );
 });
 
+/**
+ * Catch all error page
+ */
+ app.get( '*', function( req, res ) {
+  res.render('errors');
+});
+
 app.listen( 3000, function() {
   console.log('Starting portfolio-constructicon app on port 3000');
 });
