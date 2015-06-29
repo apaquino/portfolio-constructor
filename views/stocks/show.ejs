@@ -40,10 +40,10 @@
         <% } else { %>
           <td class="negative">
         <% } %>
-          $<%= stock.estPrice.toFixed(2) %>
+          $<%= CurrencyFormat(stock.estPrice) %>
         </td>
         <td>
-          $<%= stockDetails.currPrice %>
+          $<%= CurrencyFormat(stockDetails.currPrice) %>
         </td>
         <td>
           <%= (stockDetails.estimatedYrEndRtn * 100).toFixed(2) %>%
