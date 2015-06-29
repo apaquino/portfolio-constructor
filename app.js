@@ -264,6 +264,7 @@ app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, routeMidd
 app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function( req, res ) {
   var stockDetails = {},
       symbolForUrl,
+      yrStartPrice,
       currPrice;
 
   db.Stock.findById( req.params.id, function( err, stock ) {
@@ -271,6 +272,7 @@ app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, 
 
     stockDetails.estimatedYrEndRtn = stock.estimatedYrEndRtn;
     stockDetails.stddev = quant.STDDev(quant.stockReturns(stock.prices)) * Math.sqrt(250);
+    stockDetails.yrStartPrice = stock.prices[0];
 
     db.Portfolio.findById( req.params.portfolio_id, function( err, portfolio ) {
       if (err) {

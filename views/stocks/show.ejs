@@ -20,10 +20,13 @@
     <thead>
       <tr>
         <th>
-          Estimated Year End Price
+          Year Starting Price
         </th>
         <th>
           Last Closing Price
+        </th>
+        <th>
+          Estimated Year End Price
         </th>
         <th>
           Estimated Return
@@ -35,15 +38,18 @@
     </thead>
     <tbody>
       <tr>
+        <td>
+          $<%= CurrencyFormat(stockDetails.yrStartPrice) %>
+        </td>
+        <td>
+          $<%= CurrencyFormat(stockDetails.currPrice) %>
+        </td>
         <% if ( Number(stock.estPrice) > Number(stockDetails.currPrice) ) { %>
           <td class="positive">
         <% } else { %>
           <td class="negative">
         <% } %>
           $<%= CurrencyFormat(stock.estPrice) %>
-        </td>
-        <td>
-          $<%= CurrencyFormat(stockDetails.currPrice) %>
         </td>
         <td>
           <%= (stockDetails.estimatedYrEndRtn * 100).toFixed(2) %>%
