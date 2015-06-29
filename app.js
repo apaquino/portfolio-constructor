@@ -42,7 +42,7 @@ app.get( '/', function( req, res ) {
 
 // Portfolio INDEX route, GET
 app.get( '/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
-  db.Portfolio.find( {}, function( err, portfolios ) {
+  db.Portfolio.find( {ownerId: req.session.id }, function( err, portfolios ) {
     if ( err ) {
       //TODO
       console.log("Error in Index Portfolio Route", err);
@@ -62,7 +62,7 @@ app.get( '/portfolios/new', routeMiddleware.ensureLoggedIn, function( req, res )
 app.post('/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
   var newPortfolio = req.body.portfolio;
       newPortfolio.ownerId = req.session.id;
-      
+
   db.Portfolio.create( newPortfolio , function( err, portfolio ) {
     if( err ) {
       console.log(err);
