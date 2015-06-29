@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-    mongoose.connect("mongodb://localhost/portfolio_app");
+    mongoose.connect( process.env.MONGOLAB_URI || "mongodb://localhost/portfolio_app" );
     mongoose.set( 'debug', true );
 
 module.exports.Portfolio = require( './portfolio' );
