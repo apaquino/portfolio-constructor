@@ -12,9 +12,9 @@
 <h2>Edit portfolio name</h2>
 <div class="ui form segment">
   <form class="ui form" method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
-    <div class="field">
+    <div class="required field">
       <label for="name">Name:</label>
-        <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>'>
+        <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>' required="true">
     </div>
       <input class="circular ui green button" type="submit" value="UPDATE">
   </form>

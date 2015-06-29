@@ -22,9 +22,9 @@
       <label for="name">Name:</label>
         <input type="text" id="name"  disabled value="<%= stock.name %>" >
     </div>
-    <div class="field">
+    <div class="required field">
       <label for="amount">Amount:</label>
-        <input type="text" id="name" name="stock[amount]"  value="<%= stock.amount%>" >
+        <input type="text" id="name" name="stock[amount]"  value="<%= stock.amount%>" required="true" >
     </div>
 
       <input type="submit" value="UPDATE" class="circular ui green button">
