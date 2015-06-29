@@ -14,6 +14,10 @@ app.use(express.static( __dirname + '/public') );
 app.use(bodyParser.urlencoded( {extended:true} ));
 app.use( morgan( 'tiny' ));
 
+
+// helper file to number formatting
+app.locals.CurrencyFormat = require('./helpers/currencyformat');
+
 /**
  * For Auth
  * Use cookie session and use and setup/config session

@@ -31,9 +31,9 @@
   </thead>
   <tbody>
     <tr>
-      <td><em>$<%= portTot %></em></td>
+      <td><em>$<%= CurrencyFormat(portTot) %></em></td>
       <td><em><%= ((portAvg * 100)).toFixed(2) %>%</em></td>
-      <td><em>$<%= (portAvg * portTot).toFixed(2) %></em></td>
+      <td><em>$<%= CurrencyFormat(portAvg * portTot) %></em></td>
     </tr>
   </tbody>
 </table>
@@ -61,7 +61,7 @@
   <tr>
     <td><a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>"><%= stock.symbol %></a></td>
     <td><%= stock.name %></td>
-    <td><%= stock.amount.toFixed(2) %></td>
+    <td><%= CurrencyFormat(stock.amount) %></td>
     <td><%= ((stock.amount / portTot) * 100).toFixed(2) %></td>
     <td><%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
     <td><%= (stock.estPrice).toFixed(2) %></td>
@@ -80,7 +80,7 @@
   <tr>
     <td></td>
     <td>Portfolio Total:</td>
-    <td><b>$<%= portTot %></b></td>
+    <td><b>$<%= CurrencyFormat(portTot) %></b></td>
     <td>Avg Rtn of Portfolio:</td>
     <td><b><%= ((portAvg * 100)).toFixed(2) %>%</b></td>
     <td></td>
