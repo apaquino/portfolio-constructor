@@ -6,6 +6,7 @@ var express = require( 'express' ),
     morgan = require( 'morgan' ),
     request = require( 'request'),
     session = require("cookie-session"),
+    flash = require('connect-flash'),
     db = require( './models' );
 
 app.set( 'view engine', 'ejs' );
@@ -13,7 +14,7 @@ app.use(methodOverride( '_method' ));
 app.use(express.static( __dirname + '/public') );
 app.use(bodyParser.urlencoded( {extended:true} ));
 app.use( morgan( 'tiny' ));
-
+app.use(flash());
 
 // helper file to number formatting
 app.locals.CurrencyFormat = require('./helpers/currencyformat');
@@ -51,7 +52,7 @@ app.get( '/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
       //TODO
       console.log("Error in Index Portfolio Route", err);
     } else {
-      res.render( 'portfolios/index', {portfolios:portfolios});
+      res.render( 'portfolios/index', {portfolios:portfolios, firstname: req.session.firstname});
     }
   });
 });
@@ -59,7 +60,7 @@ app.get( '/portfolios', routeMiddleware.ensureLoggedIn, function( req, res ) {
 // Portfolio NEW route, GET
 
 app.get( '/portfolios/new', routeMiddleware.ensureLoggedIn, function( req, res ) {
-  res.render( 'portfolios/new');
+  res.render( 'portfolios/new', {firstname: req.session.firstname});
 });
 
 // Portfolio NEW route, POST
@@ -109,7 +110,7 @@ app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensu
               var currPrices = body.split("\n");
               currPrices.pop();
               //console.log(currPrices);
-              res.render( 'portfolios/show', {portfolio:portfolio, portTot:portTot, portAvg:portAvg, currPrices:currPrices} );
+              res.render( 'portfolios/show', {portfolio:portfolio, portTot:portTot, portAvg:portAvg, currPrices:currPrices, firstname: req.session.firstname} );
             }
           });
       }
@@ -119,7 +120,7 @@ app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensu
 // Portfolio EDIT route, GET
 app.get('/portfolios/:id/edit', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUser, function( req, res ) {
   db.Portfolio.findById( req.params.id, function ( err, portfolio ) {
-      res.render( 'portfolios/edit', {portfolio:portfolio} );
+      res.render( 'portfolios/edit', {portfolio:portfolio, firstname: req.session.firstname} );
   });
 });
 
@@ -158,7 +159,7 @@ app.delete('/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.en
  // Stock NEW route, GET
  app.get('/portfolios/:portfolio_id/stocks/new', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function( req, res ) {
   db.Portfolio.findById(req.params.portfolio_id, function ( err, portfolio ) {
-       res.render("stocks/new", {portfolio:portfolio});
+       res.render("stocks/new", {portfolio:portfolio, firstname: req.session.firstname});
   });
  });
 
@@ -242,12 +243,15 @@ app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, routeMidd
         portfolio.stocks.forEach( function( stock ) {
            if (newStock.symbol === stock.symbol) {
              haveStock = true;
+             req.flash("messages", { "info" : "You already have this stock in your portfolio" });
            }
         });
 
         if (!haveStock) {
           portfolio.stocks.push( newStock );
           portfolio.save();
+          req.flash("messages", { "info" : "" });
+
         }
 
         res.redirect( '/portfolios/' + req.params.portfolio_id );
@@ -282,7 +286,7 @@ app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, 
           } else if (!error && response.statusCode === 200) {
             currPrice = body.split(',')[1];
             stockDetails.currPrice = currPrice;
-            res.render('stocks/show', {stock:stock, stockDetails:stockDetails, portfolio:portfolio});
+            res.render('stocks/show', {stock:stock, stockDetails:stockDetails, portfolio:portfolio, firstname: req.session.firstname});
           }
         });
       }
@@ -306,7 +310,7 @@ app.get( '/portfolios/:portfolio_id/stocks/:id/edit', routeMiddleware.ensureLogg
             stock = portStock;
           }
         });
-        res.render( 'stocks/edit', {portfolio:portfolio, stock:stock});
+        res.render( 'stocks/edit', {portfolio:portfolio, stock:stock, firstname: req.session.firstname});
       }
     });
 });
@@ -376,7 +380,6 @@ app.post( '/login', function ( req, res ) {
      req.login( user );
      res.redirect( '/portfolios' );
    } else {
-     // TODO - handle errors in ejs!
      res.render( 'users/login' );
    }
  });
