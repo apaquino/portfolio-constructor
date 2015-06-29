@@ -55,13 +55,10 @@
   },
   minLength: 1,
     select: function (event, ui) {
-       //alert(ui.item.value.split("#")[1]);
-       //alert(ui.item.value);
-       //$("#txtTicker").val(ui.item.value.split("#")[0]);
-       $('#symbol').val(ui.item.value.split("#")[1].split(':')[1]);
-       $('#name').val(ui.item.value.split("#")[0].split(':')[1]);
-       $('#exchange').val(ui.item.value.split("#")[2].split(':')[1]);
-  },
+       $('#symbol').val(ui.item.value.split("#")[1].split(':')[1]).prop("readonly", true);
+       $('#name').val(ui.item.value.split("#")[0].split(':')[1]).prop("readonly", true);
+       $('#exchange').val(ui.item.value.split("#")[2].split(':')[1]).prop("readonly", true);
+    },
 });
 </script>
 <br>
