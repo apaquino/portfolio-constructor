@@ -113,14 +113,14 @@ app.get( '/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensu
 });
 
 // Portfolio EDIT route, GET
-app.get('/portfolios/:id/edit', routeMiddleware.ensureLoggedIn, function( req, res ) {
+app.get('/portfolios/:id/edit', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUser, function( req, res ) {
   db.Portfolio.findById( req.params.id, function ( err, portfolio ) {
       res.render( 'portfolios/edit', {portfolio:portfolio} );
   });
 });
 
 // Portfolio UPDATE route, PUT
-app.put('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
+app.put('/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUser, function( req, res ) {
   var updatedPost = req.body.portfolio;
   db.Portfolio.findByIdAndUpdate( req.params.id, updatedPost,
     function (err, post) {
@@ -134,7 +134,7 @@ app.put('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) 
 
 // Portfolio DELETE route, DELETE
 
-app.delete('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
+app.delete('/portfolios/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUser, function( req, res ) {
   db.Portfolio.findById( req.params.id, function ( err, portfolio ) {
     if( err ) {
       console.log( err );
@@ -152,14 +152,14 @@ app.delete('/portfolios/:id', routeMiddleware.ensureLoggedIn, function( req, res
  */
 
  // Stock NEW route, GET
- app.get('/portfolios/:portfolio_id/stocks/new', routeMiddleware.ensureLoggedIn, function( req, res ) {
+ app.get('/portfolios/:portfolio_id/stocks/new', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function( req, res ) {
   db.Portfolio.findById(req.params.portfolio_id, function ( err, portfolio ) {
        res.render("stocks/new", {portfolio:portfolio});
   });
  });
 
 // Stock NEW route, POST
-app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, function( req, res ){
+app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested ,function( req, res ){
 
   var newStock =  {};
   newStock.symbol = String.prototype.trim.call(req.body.stock.symbol);
@@ -253,7 +253,7 @@ app.post( '/portfolios/:portfolio_id', routeMiddleware.ensureLoggedIn, function(
 });
 
 // Show Route, GET
-app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
+app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function( req, res ) {
   var stockDetails = {},
       symbolForUrl,
       currPrice;
@@ -288,7 +288,7 @@ app.get('/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, 
 
 // Stock UPDATE route, GET --
 // to edit a stock from the stocks array in the portfolio
-app.get( '/portfolios/:portfolio_id/stocks/:id/edit', routeMiddleware.ensureLoggedIn, function ( req, res ) {
+app.get( '/portfolios/:portfolio_id/stocks/:id/edit', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function ( req, res ) {
   db.Portfolio.findOne(
     { _id: req.params.portfolio_id},
     function ( err, portfolio ) {
@@ -309,7 +309,7 @@ app.get( '/portfolios/:portfolio_id/stocks/:id/edit', routeMiddleware.ensureLogg
 
 // Stock UPDATE route, PUT --
 // to edit a stock from the stocks array in the portfolio
-app.put( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, function ( req, res ) {
+app.put( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function ( req, res ) {
   var newAmount = Number(req.body.stock.amount);
   db.Portfolio.update(
     { _id: req.params.portfolio_id, "stocks.id": req.params.id },
@@ -325,7 +325,7 @@ app.put( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn,
 });
 // Stock DELETE route, DELETE --
 // to remove stock from the stocks array in the portfolio
-app.delete( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, function( req, res ) {
+app.delete( '/portfolios/:portfolio_id/stocks/:id', routeMiddleware.ensureLoggedIn, routeMiddleware.ensureCorrectUserNested, function( req, res ) {
   db.Portfolio.update (
     { _id: req.params.portfolio_id },
     { $pull: { stocks: { id: req.params.id } } },
