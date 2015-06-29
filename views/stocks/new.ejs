@@ -68,19 +68,19 @@
   <form class="ui form" action="/portfolios/<%= portfolio.id %>" method="POST" >
     <div class="field">
       <label for="symbol">Symbol:</label>
-        <input type="text" id="symbol" name="stock[symbol]" class="form-control">
+        <input type="text" id="symbol" name="stock[symbol]" >
     </div>
     <div class="field">
       <label for="name">Company Name:</label>
-        <input type="text" id="name" name="stock[name]" class="form-control" >
+        <input type="text" id="name" name="stock[name]"  >
     </div>
     <div class="field">
       <label for="exchange">Exchange:</label>
-        <input type="text" id="exchange" name="stock[exchange]" class="form-control" >
+        <input type="text" id="exchange" name="stock[exchange]"  >
     </div>
     <div class="required field">
       <label for="amount">Amount:</label>
-        <input type="text" id="amount" name="stock[amount]" class="form-control" >
+        <input type="text" id="amount" name="stock[amount]" required="true" >
     </div>
     <div >
       <input class="circular ui green button" type="submit" value="Add" >
