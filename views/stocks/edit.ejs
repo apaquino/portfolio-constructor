@@ -11,22 +11,24 @@
 
 <h2>UPDATE amount of <%= stock.name %> stock</h2>
 <h3>In the <em><%= portfolio.name %></em> portfolio</h3>
+  <div class="ui form segment">
+  <form class="ui form"method="POST" action="/portfolios/<%= portfolio._id%>/stocks/<%= stock.id%>/?_method=PUT" >
+    <div class="field">
+      <label for="symbol">Symbol:</label>
+        <input type="text" id="symbol"  disabled value="<%= stock.symbol%>" >
+    </div>
+    <div class="field">
+      <label for="name">Name:</label>
+        <input type="text" id="name"  disabled value="<%= stock.name %>" >
+    </div>
+    <div class="field">
+      <label for="amount">Amount:</label>
+        <input type="text" id="name" name="stock[amount]"  value="<%= stock.amount%>" >
+    </div>
 
-<form class="ui form"method="POST" action="/portfolios/<%= portfolio._id%>/stocks/<%= stock.id%>/?_method=PUT" >
-  <div class="field">
-    <label for="symbol">Symbol:</label>
-      <input type="text" id="symbol"  disabled value="<%= stock.symbol%>" >
-  </div>
-  <div class="field">
-    <label for="name">Name:</label>
-      <input type="text" id="name"  disabled value="<%= stock.name %>" >
-  </div>
-  <div class="field">
-    <label for="amount">Amount:</label>
-      <input type="text" id="name" name="stock[amount]"  value="<%= stock.amount%>" >
-  </div>
+      <input type="submit" value="UPDATE" class="circular ui green button">
 
-    <input type="submit" value="UPDATE" class="ui green button">
+  </form>
+</div>
 
-</form>
 <% include ../partials/footer.ejs %>
