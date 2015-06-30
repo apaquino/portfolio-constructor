@@ -15,16 +15,16 @@
     <form class="ui form" method="POST" action="/signup" >
       <div class="two fields">
         <div class="required field">
-          <label for="username">Username (email):</label>
+          <label for="email">Username (email):</label>
             <div class="ui icon input">
-              <input type="email" id="username" name="user[username]" required="true" autofocus>
+              <input type="email" id="email" name="user[username]" required="true" autofocus>
               <i class="user icon"></i>
             </div>
         </div>
         <div class="required field">
-          <label> Password: </label>
+          <label for="password"> Password: </label>
           <div class="ui icon input">
-            <input type="password" id="pass" name="user[password]" required="true" >
+            <input type="password" id="password" name="user[password]" required="true" >
             <i class="lock icon"></i>
           </div>
         </div>
@@ -59,4 +59,51 @@
      </div>
    </a>
  </div>
+ <script type="text/javascript">
+
+ (function ($) {
+     $('.ui.form').form({
+       email: {
+         identifier: 'email',
+         rules: [{
+           type: 'empty',
+           prompt: 'Please enter your username (email)'
+         }, {
+           type: 'email',
+           prompt: 'Please enter a valid email'
+         }]
+       },
+       password: {
+         identifier: 'password',
+         rules: [{
+           type: 'empty',
+           prompt: 'Please enter a password'
+         },{
+           type: 'length[6]',
+           prompt: 'Password needs to be atleast 6 characters long'
+         }]
+       },
+       firstname: {
+         identifier: 'firstname',
+         rules: [{
+           type: 'empty',
+           prompt: 'Please enter your username (email)'
+         }]
+       },
+       lastname: {
+         identifier: 'lastname',
+         rules: [{
+           type: 'empty',
+           prompt: 'Please enter your username (email)'
+         }]
+       }
+     },
+      {
+       on: 'blur',
+       inline: 'true'
+     });
+   }(jQuery));
+
+ </script>
+
 <% include ../partials/footer %>
