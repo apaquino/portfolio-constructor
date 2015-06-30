@@ -19,19 +19,19 @@
   <table class="ui table">
     <thead>
       <tr>
-        <th>
+        <th data-content="Starting price at the first trading day of the year.">
           Year Starting Price
         </th>
-        <th>
+        <th data-content="Closing price from the previous trading day.">
           Last Closing Price
         </th>
-        <th>
+        <th data-content="Estimated price based on historical daily returns, starting price of the year, and the average of 10,000 monte carlo simulation runs that adjusted the returns based on the risk.">
           Estimated Year End Price
         </th>
-        <th>
+        <th data-content="Based on historical daily returns.">
           Estimated Return
         </th>
-        <th>
+        <th data-content="Based on standard deviation of the historical daily returns.  The range +/- the estimated return.">
           Risk
         </th>
       </tr>
@@ -60,5 +60,10 @@
       </tr>
     </tbody>
   </table>
+
+  <script type="text/javascript">
+    $('th')
+      .popup();
+  </script>
 
 <% include ../partials/footer %>
