@@ -1,5 +1,4 @@
 <% include ../partials/header %>
-
 <div class="ui fixed inverted orange menu">
   <div class="item">
     <img class="ui tiny circular image" src="/images/dollarphotoclub.jpg">
@@ -17,9 +16,9 @@
       <form class="ui form" method="POST" action="/login" >
         <div class="two fields">
           <div class="required field">
-            <label for="username"> Username:</label>
+            <label for="email"> Username:</label>
             <div class="ui icon input">
-              <input type="text" id="email" name="user[username]" placeholder="username" required="true" autofocus>
+              <input type="email" id="email" name="user[username]" placeholder="enter username (email)"  required="true" autofocus>
               <i class="user icon"></i>
             </div>
           </div>
@@ -54,4 +53,34 @@
   </a>
 </div>
 
+<script type="text/javascript">
+(function ($) {
+    $('.ui.form').form({
+      email: {
+        identifier: 'email',
+        rules: [{
+          type: 'empty',
+          prompt: 'Please enter your username (email)'
+        }, {
+          type: 'email',
+          prompt: 'Please enter a valid email'
+        }]
+      },
+      pass: {
+        identifier: 'pass',
+        rules: [{
+          type: 'empty',
+          prompt: 'Please enter a password'
+        },{
+          type: 'length[6]',
+          prompt: 'Password needs to be atleast 6 characters long'
+        }]
+      },
+    }, {
+      on: 'blur',
+      inline: 'true'
+    });
+  }(jQuery));
+
+</script>
 <% include ../partials/footer %>
