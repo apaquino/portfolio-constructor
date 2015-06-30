@@ -63,7 +63,12 @@
     <td><%= stock.name %></td>
     <td><%= CurrencyFormat(stock.amount) %></td>
     <td><%= ((stock.amount / portTot) * 100).toFixed(2) %></td>
-    <td><%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
+    <% if ( Number(stock.estimatedYrEndRtn) > 0 ) { %>
+      <td class="positive">
+    <% } else { %>
+      <td class="negative">
+    <% } %>
+    <%= ((stock.estimatedYrEndRtn) * 100).toFixed(2) %>%</td>
     <td><%= (stock.estPrice).toFixed(2) %></td>
     <td><%= currPrices[index].split(",")[1] %></td>
     <td>  <a href="/portfolios/<%= portfolio.id%>/stocks/<%= stock.id %>/edit">
