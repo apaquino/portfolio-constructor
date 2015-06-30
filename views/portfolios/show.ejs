@@ -25,8 +25,8 @@
   <thead>
     <tr>
       <th>Portfolio Total</th>
-      <th>Estimated Average Portfolio Return</th>
-      <th>Estimated Return</th>
+      <th data-content="A weighted average % return based on estimated return and % allocation of each stock in the portfolio">Estimated Average Portfolio Return</th>
+      <th data-content="A weighted average $ return based on estimated return and % allocation of each stock in the portfolio">Estimated Return</th>
     </tr>
   </thead>
   <tbody>
@@ -43,8 +43,8 @@
     <th>Stock Symbol</th>
     <th>Amount ($)</th>
     <th>% of portfolio</th>
-    <th>Est. Yr End Return </th>
-    <th>Est. Yr End Price($)</th>
+    <th data-content="Based on historical daily returns." >Est. Yr End Return </th>
+    <th data-content="Estimated price based on historical daily returns, starting price of the year, and the average of 10,000 monte carlo simulation runs that adjusted the returns based on the risk.">Est. Yr End Price($)</th>
     <th>Previous Price($)</th>
     <th>Edit</th>
     <th></th>
@@ -129,5 +129,10 @@ window.onload = function () {
 
 	chart.render();
 }
+</script>
+
+<script type="text/javascript">
+  $('th')
+    .popup();
 </script>
 <% include ../partials/footer.ejs %>
