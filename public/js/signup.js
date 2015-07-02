@@ -46,6 +46,15 @@ $( document ).ready(function() {
             prompt: 'Please enter your last name'
           }
         ]
+      },
+      terms: {
+        identifier : 'terms',
+        rules: [
+          {
+            type   : 'checked',
+            prompt : 'You must agree to the terms and conditions'
+          }
+        ]
       }
     },
     on: 'blur',
