@@ -1,6 +1,8 @@
 <% include ../partials/header.ejs %>
 <% include ../partials/menu.ejs %>
 
+<script src="/js/stock.js" charset="utf-8"></script>
+
 <div class="ui breadcrumb">
   <a class="section" href="/portfolios">Home</a>
   <i class="right chevron icon divider"></i>
@@ -32,21 +34,4 @@
   </form>
 </div>
 
-<script type="text/javascript">
-(function ($) {
-    $('.ui.form').form({
-      amount: {
-        identifier: 'amount',
-        rules: [{
-          type: 'empty',
-          prompt: 'Please enter an amount'
-        }]
-      },
-    }, {
-      on: 'blur',
-      inline: 'true'
-    });
-  }(jQuery));
-
-</script>
 <% include ../partials/footer.ejs %>

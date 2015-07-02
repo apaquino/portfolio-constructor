@@ -1,5 +1,6 @@
 <% include ../partials/header.ejs %>
 <% include ../partials/menu.ejs %>
+<script src="/js/portfolio.js" charset="utf-8"></script>
 
 <div class="ui breadcrumb">
   <a class="section" href="/portfolios">Home</a>
@@ -10,31 +11,33 @@
 </div>
 
 <h2>Edit portfolio name</h2>
-<div class="ui form segment">
-  <form class="ui form" method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
-    <div class="required field">
-      <label for="name">Name:</label>
-        <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>' required="true">
-    </div>
-      <input class="circular ui green button" type="submit" value="UPDATE">
-  </form>
+<div class="ui segment">  
+  <div class="ui form">
+    <form class="ui form" method="POST" action="/portfolios/<%= portfolio.id %>/?_method=PUT" >
+      <div class="required field">
+        <label for="name">Name:</label>
+          <input type="text" id="name" name="portfolio[name]" value='<%= portfolio.name %>' required="true">
+      </div>
+        <input class="circular ui green button" type="submit" value="UPDATE">
+    </form>
+  </div>
 </div>
 
 <script type="text/javascript">
-(function ($) {
-    $('.ui.form').form({
-      name: {
-        identifier: 'name',
-        rules: [{
-          type: 'empty',
-          prompt: 'Please enter portfolio name'
-        }]
-      },
-    }, {
-      on: 'blur',
-      inline: 'true'
-    });
-  }(jQuery));
+// (function ($) {
+//     $('.ui.form').form({
+//       name: {
+//         identifier: 'name',
+//         rules: [{
+//           type: 'empty',
+//           prompt: 'Please enter portfolio name'
+//         }]
+//       },
+//     }, {
+//       on: 'blur',
+//       inline: 'true'
+//     });
+//   }(jQuery));
 
 </script>
 <% include ../partials/footer.ejs %>
