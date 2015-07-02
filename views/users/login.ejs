@@ -1,4 +1,6 @@
 <% include ../partials/header %>
+<script src="/js/login.js" charset="utf-8"></script>
+
 <div class="ui fixed inverted orange menu">
   <div class="item">
     <img class="ui tiny circular image" src="/images/dollarphotoclub.jpg">
@@ -31,6 +33,7 @@
           </div>
         </div>
         <input type="submit" value="Login" class="ui circular green button">
+        <div class="ui error message"></div>
       </form>
     </div>
   </div>
@@ -53,34 +56,4 @@
   </a>
 </div>
 
-<script type="text/javascript">
-(function ($) {
-    $('.ui.form').form({
-      email: {
-        identifier: 'email',
-        rules: [{
-          type: 'empty',
-          prompt: 'Please enter your username (email)'
-        }, {
-          type: 'email',
-          prompt: 'Please enter a valid email'
-        }]
-      },
-      pass: {
-        identifier: 'pass',
-        rules: [{
-          type: 'empty',
-          prompt: 'Please enter a password'
-        },{
-          type: 'length[6]',
-          prompt: 'Password needs to be atleast 6 characters long'
-        }]
-      },
-    }, {
-      on: 'blur',
-      inline: 'true'
-    });
-  }(jQuery));
-
-</script>
 <% include ../partials/footer %>
