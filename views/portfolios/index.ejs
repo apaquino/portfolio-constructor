@@ -9,7 +9,9 @@
 
 <a href="/portfolios/new"><button type="button" name="button" class="circular ui green button" ><i class="add circle icon"></i>Create a NEW Portfolio</button></a>
 
-<table class="ui striped table">
+<div class="ui segment">
+
+<table class="ui very basic selectable table">
   <thead>
     <th>Name</th>
     <th></th>
@@ -23,19 +25,19 @@
       <td>
         <a href="/portfolios/<%= portfolio.id %>"><%= portfolio.name %></a>
       </td>
-      <td style="text-align:right">
+      <td style="text-align:right" class='collapsing'>
         <a href="/portfolios/<%= portfolio.id %>/stocks/new">
           <i class="add circle icon"></i>
           Add a stock
         </a>
       </td>
-      <td style="text-align:right">
+      <td style="text-align:right" class='collapsing'>
         <a href="/portfolios/<%= portfolio.id %>/edit">
           <i class="edit icon"></i>
           Edit Name
         </a>
       </td>
-      <td style="text-align:right">
+      <td style="text-align:right" class='collapsing'>
         <form  action="/portfolios/<%= portfolio.id %>/?_method=DELETE" method="post">
           <input class="circular ui icon button" style="background:red;color:white" type="submit" value="X">
         </form>
@@ -45,4 +47,5 @@
 
   </tbody>
 </table>
+</div>
 <% include ../partials/footer.ejs %>
